@@ -45,7 +45,9 @@ StartupRobos (formerly Launchpad) is an AI CXO multi-agent startup platform. Ent
 | **Artifact** | A CXO-generated output (report, site, product) that lives in `agent_runs.result` | "output", "file" |
 | **Handoff** | The inferred relationship when one CXO's run is followed by another on the same startup within 6h | "chain", "dependency" |
 | **agent_run** | A single execution of one CXO on one startup — the core event record in the DB | — |
-| **Business type** | One of: `affiliate_seo`, `digital_product`, `game_ads` | "category", "template" |
+| **Business type** | One of: `affiliate_seo`, `digital_product`, `game_ads`, `saas`, `physical_product` | "category", "template" |
+| **Dreaming** | A Haiku-based memory synthesis run that reviews past CxO sessions and extracts durable learnings into a `memory` entry | "summarize", "recap" |
+| **Mission Control** | A dashboard page (`/mission-control`) showing all active businesses, experiments, and CxO status for an operator | "home", "overview" |
 
 ## Key architectural decisions
 
@@ -54,6 +56,9 @@ StartupRobos (formerly Launchpad) is an AI CXO multi-agent startup platform. Ent
 - All agent costs tracked in USD in `agent_runs.cost_usd`
 - RLS enabled on all tables; `createServiceClient()` (service_role) used only server-side
 - Dashboard is internal-only; user authentication via Supabase Auth
+- **Dreaming** (`src/lib/agent/dreaming.ts`): Haiku-based async memory synthesis — runs after council sessions, writes to `agent_memories` table
+- **Mission Control** (`src/app/mission-control/`): operator dashboard auto-updated by Coordinator after each heartbeat
+- **Business types** expanded beyond initial 3: `saas` and `physical_product` added to `TYPE_CONFIG` (`src/lib/startup/config.ts`)
 
 ## What's out of scope for agents
 
