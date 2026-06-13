@@ -4,6 +4,11 @@
 
 set -euo pipefail
 
+# テスト環境（BATS など）での入力ソースオーバーライド。
+# curl | bash では /dev/tty を使用するが、テストでは stdin から読む必要がある。
+# 例: export _READ_TTY=/dev/stdin を設定してから bats を実行する。
+_READ_TTY="${_READ_TTY:-/dev/tty}"
+
 echo ""
 echo "  StartupRobos — AI CXO Startup Platform"
 echo "  ========================================"
@@ -27,7 +32,7 @@ if ! command -v claude &>/dev/null; then
   echo "  Claude Code CLI is required."
   echo "  Install: npm install -g @anthropic-ai/claude-code@1"
   echo ""
-  read -r -p "  Install now? (y/n): " install_cc </dev/tty || true
+  read -r -p "  Install now? (y/n): " install_cc <"$_READ_TTY" || true
   if [[ "$install_cc" == "y" || "$install_cc" == "Y" ]]; then
     npm install -g @anthropic-ai/claude-code@1
   else
@@ -116,13 +121,13 @@ prompt_required() {
 
   if [ -n "$staff_val" ]; then
     local masked="${staff_val:0:8}..."
-    read -r -p "  $label (default: $masked): " result </dev/tty || true
+    read -r -p "  $label (default: $masked): " result <"$_READ_TTY" || true
     if [ -z "$result" ]; then
       result="$staff_val"
     fi
   else
     while [ -z "$result" ]; do
-      read -r -p "  $label: " result </dev/tty || true
+      read -r -p "  $label: " result <"$_READ_TTY" || true
     done
   fi
 
@@ -140,12 +145,12 @@ prompt_optional() {
 
   if [ -n "$staff_val" ]; then
     local masked="${staff_val:0:8}..."
-    read -r -p "  $label (press Enter to skip, default: $masked): " result </dev/tty || true
+    read -r -p "  $label (press Enter to skip, default: $masked): " result <"$_READ_TTY" || true
     if [ -z "$result" ]; then
       result="$staff_val"
     fi
   else
-    read -r -p "  $label (press Enter to skip): " result </dev/tty || true
+    read -r -p "  $label (press Enter to skip): " result <"$_READ_TTY" || true
   fi
 
   printf '%s' "$result"

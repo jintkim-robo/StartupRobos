@@ -4,8 +4,10 @@
 SCRIPT_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")/../.." && pwd)"
 START_SH="$SCRIPT_DIR/start.sh"
 
-# Save original PATH for setup
+# Save original PATH and HOME for teardown
 ORIG_PATH="$PATH"
+ORIG_HOME="$HOME"
+BASH_EXE="$(which bash)"
 
 # Standard inputs for tests (4 required + 4 optional)
 STANDARD_INPUTS="https://test.supabase.co
@@ -19,6 +21,9 @@ sk-ant-test-api-key-789
 "
 
 setup() {
+  # テスト環境では stdin から入力を読む（/dev/tty はブロックするため）
+  export _READ_TTY=/dev/stdin
+
   # Create fake PATH directories before tests
   mkdir -p /tmp/fake-path-no-git
   mkdir -p /tmp/fake-path-no-node
@@ -28,22 +33,23 @@ setup() {
   REAL_GIT="$(which git)"
   REAL_NODE="$(which node)"
   REAL_NPM="$(which npm)"
-  REAL_BASH="$(which bash)"
 
-  # Setup fake-path-no-git (has node, npm, bash but not git)
+  # Setup fake-path-no-git (has node, npm but not git)
   ln -sf "$REAL_NODE" /tmp/fake-path-no-git/node 2>/dev/null || true
   ln -sf "$REAL_NPM" /tmp/fake-path-no-git/npm 2>/dev/null || true
-  ln -sf "$REAL_BASH" /tmp/fake-path-no-git/bash 2>/dev/null || true
 
-  # Setup fake-path-no-node (has git, npm, bash but not node)
+  # Setup fake-path-no-node (has git, npm but not node)
   ln -sf "$REAL_GIT" /tmp/fake-path-no-node/git 2>/dev/null || true
   ln -sf "$REAL_NPM" /tmp/fake-path-no-node/npm 2>/dev/null || true
-  ln -sf "$REAL_BASH" /tmp/fake-path-no-node/bash 2>/dev/null || true
 
-  # Setup fake-path-no-npm (has git, node, bash but not npm)
+  # Setup fake-path-no-npm (has git, node but not npm)
   ln -sf "$REAL_GIT" /tmp/fake-path-no-npm/git 2>/dev/null || true
   ln -sf "$REAL_NODE" /tmp/fake-path-no-npm/node 2>/dev/null || true
-  ln -sf "$REAL_BASH" /tmp/fake-path-no-npm/bash 2>/dev/null || true
+}
+
+teardown() {
+  export PATH="$ORIG_PATH"
+  export HOME="$ORIG_HOME"
 }
 
 # Helper to create a full fake PATH with all needed tools
@@ -52,17 +58,23 @@ setup_full_fake_path() {
   local path_dir="$1"
   /bin/rm -rf "$path_dir"
   /bin/mkdir -p "$path_dir"
-  /bin/ln -sf "$(which node)" "$path_dir/node" 2>/dev/null || true
-  /bin/ln -sf "$(which bash)" "$path_dir/bash" 2>/dev/null || true
-  /bin/ln -sf "$(which openssl)" "$path_dir/openssl" 2>/dev/null || true
-  /bin/ln -sf "$(which cat)" "$path_dir/cat" 2>/dev/null || true
-  /bin/ln -sf "$(which mkdir)" "$path_dir/mkdir" 2>/dev/null || true
-  /bin/ln -sf "$(which cp)" "$path_dir/cp" 2>/dev/null || true
-  /bin/ln -sf "$(which echo)" "$path_dir/echo" 2>/dev/null || true
-  /bin/ln -sf "$(which tr)" "$path_dir/tr" 2>/dev/null || true
-  /bin/ln -sf "$(which printf)" "$path_dir/printf" 2>/dev/null || true
-  /bin/ln -sf "$(which test)" "$path_dir/test" 2>/dev/null || true
-  /bin/ln -sf "$(which [)" "$path_dir/[" 2>/dev/null || true
+  # Use shell script wrappers instead of symlinks — MSYS2 binaries fail with
+  # "cannot open shared object file" when run outside their install prefix.
+  for cmd in node uname openssl cat mkdir cp echo tr printf test; do
+    local real_path
+    real_path="$(which "$cmd" 2>/dev/null)" || true
+    if [ -n "$real_path" ]; then
+      printf '#!/bin/bash\n"%s" "$@"\n' "$real_path" > "$path_dir/$cmd"
+      /bin/chmod +x "$path_dir/$cmd"
+    fi
+  done
+  # [ requires special quoting
+  local bracket_path
+  bracket_path="$(which '[' 2>/dev/null)" || true
+  if [ -n "$bracket_path" ]; then
+    printf '#!/bin/bash\n"%s" "$@"\n' "$bracket_path" > "$path_dir/["
+    /bin/chmod +x "$path_dir/["
+  fi
 }
 
 # =============================================================================
@@ -72,7 +84,7 @@ setup_full_fake_path() {
 @test "exits 1 when git is missing" {
   export PATH="/tmp/fake-path-no-git"
 
-  run bash "$START_SH"
+  run "$BASH_EXE" "$START_SH"
 
   [ "$status" -eq 1 ]
   [[ "$output" == *"git"* ]]
@@ -81,7 +93,7 @@ setup_full_fake_path() {
 @test "exits 1 when node is missing" {
   export PATH="/tmp/fake-path-no-node"
 
-  run bash "$START_SH"
+  run "$BASH_EXE" "$START_SH"
 
   [ "$status" -eq 1 ]
   [[ "$output" == *"node"* ]]
@@ -90,7 +102,7 @@ setup_full_fake_path() {
 @test "exits 1 when npm is missing" {
   export PATH="/tmp/fake-path-no-npm"
 
-  run bash "$START_SH"
+  run "$BASH_EXE" "$START_SH"
 
   [ "$status" -eq 1 ]
   [[ "$output" == *"npm"* ]]
@@ -106,11 +118,10 @@ setup_full_fake_path() {
   /bin/ln -sf "$(which git)" /tmp/fake-path-no-claude/git
   /bin/ln -sf "$(which node)" /tmp/fake-path-no-claude/node
   /bin/ln -sf "$(which npm)" /tmp/fake-path-no-claude/npm
-  /bin/ln -sf "$(which bash)" /tmp/fake-path-no-claude/bash
 
   export PATH="/tmp/fake-path-no-claude"
 
-  run bash "$START_SH" <<< "n"
+  run "$BASH_EXE" "$START_SH" <<< "n"
 
   [[ "$output" == *"Claude Code"* ]]
   [[ "$output" == *"Install"* ]] || [[ "$output" == *"install"* ]]
@@ -122,11 +133,10 @@ setup_full_fake_path() {
   /bin/ln -sf "$(which git)" /tmp/fake-path-no-claude2/git
   /bin/ln -sf "$(which node)" /tmp/fake-path-no-claude2/node
   /bin/ln -sf "$(which npm)" /tmp/fake-path-no-claude2/npm
-  /bin/ln -sf "$(which bash)" /tmp/fake-path-no-claude2/bash
 
   export PATH="/tmp/fake-path-no-claude2"
 
-  run bash "$START_SH" <<< "n"
+  run "$BASH_EXE" "$START_SH" <<< "n"
 
   [ "$status" -eq 1 ]
 }
@@ -166,7 +176,7 @@ FAKECLAUDE
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   [[ "$output" == *"already exists"* ]] || [[ "$output" == *"skipping"* ]]
 
@@ -208,7 +218,7 @@ FAKECLAUDE
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   export PATH="$ORIG_PATH"
 
@@ -260,7 +270,7 @@ FAKECLAUDE
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   [ -f /tmp/npm_calls.log ]
   /bin/grep -q "install" /tmp/npm_calls.log
@@ -306,7 +316,7 @@ FAKECLAUDE
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   [[ "$output" == *"Launching Claude Code"* ]]
   [ -f /tmp/claude_calls.log ]
@@ -351,7 +361,7 @@ FAKECLAUDE
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   [ -f "$TEST_DIR/StartupRobos/.env.local.bak" ]
   /bin/grep -q "EXISTING_KEY=old_value" "$TEST_DIR/StartupRobos/.env.local.bak"
@@ -394,7 +404,7 @@ FAKECLAUDE
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   export PATH="$ORIG_PATH"
 
@@ -439,7 +449,7 @@ FAKECLAUDE
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   export PATH="$ORIG_PATH"
 
@@ -502,7 +512,7 @@ FAKECLAUDE
   cd "$TEST_DIR"
 
   # Press Enter 8 times to accept all staff defaults + skip optionals
-  run bash "$START_SH" <<EOF
+  run "$BASH_EXE" "$START_SH" <<EOF
 
 
 
@@ -557,7 +567,7 @@ FAKECLAUDE
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   [[ "$output" == *"https://"* ]] && [[ "$output" == *"..."* ]]
 
@@ -599,7 +609,7 @@ FAKECLAUDE
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<EOF
+  run "$BASH_EXE" "$START_SH" <<EOF
 https://useroverride.supabase.co
 user-anon-key
 user-service-key
@@ -655,7 +665,7 @@ FAKECLAUDE
   cd "$TEST_DIR"
 
   # Accept default for URL (Enter), provide others
-  run bash "$START_SH" <<EOF
+  run "$BASH_EXE" "$START_SH" <<EOF
 
 user-anon-key
 user-service-key
@@ -714,10 +724,11 @@ FAKECLAUDE
 
   export PATH="/tmp/fake-path-robobuilder"
   export HOME="$FAKE_HOME"
+  unset APPDATA
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   [ -f /tmp/git_calls.log ]
   /bin/grep -q "robobuilder" /tmp/git_calls.log
@@ -736,8 +747,8 @@ FAKECLAUDE
 
   /bin/cat > /tmp/fake-path-rb-pull/git <<'FAKEGIT'
 #!/bin/bash
-if [[ "$1" == "-C" ]] && [[ "$3" == "pull" ]]; then
-  echo "GIT_PULL: $@" >> /tmp/git_pull_calls.log
+if [[ "$1" == "-C" ]] && [[ "$3" == "fetch" ]]; then
+  echo "GIT_FETCH: $@" >> /tmp/git_pull_calls.log
 fi
 exit 0
 FAKEGIT
@@ -759,14 +770,14 @@ FAKECLAUDE
 
   export PATH="/tmp/fake-path-rb-pull"
   export HOME="$FAKE_HOME"
+  unset APPDATA
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   [ -f /tmp/git_pull_calls.log ]
-  /bin/grep -q "pull" /tmp/git_pull_calls.log
-  /bin/grep -q "ff-only" /tmp/git_pull_calls.log
+  /bin/grep -q "fetch" /tmp/git_pull_calls.log
 
   /bin/rm -rf "$TEST_DIR" "$FAKE_HOME" /tmp/git_pull_calls.log
 }
@@ -781,7 +792,7 @@ FAKECLAUDE
 
   /bin/cat > /tmp/fake-path-rb-fail/git <<'FAKEGIT'
 #!/bin/bash
-if [[ "$1" == "-C" ]] && [[ "$3" == "pull" ]]; then
+if [[ "$1" == "-C" ]] && [[ "$3" == "fetch" ]]; then
   exit 1
 fi
 exit 0
@@ -802,13 +813,14 @@ FAKECLAUDE
 
   export PATH="/tmp/fake-path-rb-fail"
   export HOME="$FAKE_HOME"
+  unset APPDATA
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   [ "$status" -eq 0 ]
-  [[ "$output" == *"Warning"* ]] || [[ "$output" == *"warning"* ]]
+  [[ "$output" == *"WARNING"* ]]
 
   /bin/rm -rf "$TEST_DIR" "$FAKE_HOME"
 }
@@ -845,10 +857,11 @@ FAKECLAUDE
 
   export PATH="/tmp/fake-path-plugins"
   export HOME="$FAKE_HOME"
+  unset APPDATA
 
   cd "$TEST_DIR"
 
-  run bash "$START_SH" <<< "$STANDARD_INPUTS"
+  run "$BASH_EXE" "$START_SH" <<< "$STANDARD_INPUTS"
 
   [ -d "$FAKE_HOME/.claude/plugins" ]
 
