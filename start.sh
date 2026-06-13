@@ -56,7 +56,7 @@ fi
 # ---------------------------------------------------------------------------
 # 3b. Install robobuilder into plugins directory (platform-aware)
 # ---------------------------------------------------------------------------
-ROBOBUILDER_REF="9f9eabd53680f6b5749fcf7b504d8381f7eb6c1d"
+ROBOBUILDER_REF="8d6bac3dd36b733affd96e984cb8fa3dfe32a5e3"
 
 # Detect platform and set plugins path accordingly
 case "$(uname -s)" in
