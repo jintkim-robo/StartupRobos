@@ -67,7 +67,9 @@ Keys pasted here persist in conversation logs. Always direct users to edit `.env
 or use `scripts/init-operator.sh` which accepts keys via hidden terminal input.
 
 After `.env.local` is populated:
-1. Verify it contains the required values (`NEXT_PUBLIC_SUPABASE_URL`, `ANTHROPIC_API_KEY`)
+1. Verify keys exist (check existence only — do NOT read or display actual values):
+   Run: `grep -c 'NEXT_PUBLIC_SUPABASE_URL=.\+' .env.local && grep -c 'ANTHROPIC_API_KEY=.\+' .env.local`
+   Both should return `1`. Do NOT use `cat`, `Read`, or any command that would expose key values in this conversation.
 2. Check Supabase schema: query the `profiles` table. If it doesn't exist, instruct the user to paste `supabase/schema.sql` and `supabase/migrations/001_spend_budget_rpc.sql` into Supabase SQL Editor
 3. Proceed to Step 1
 

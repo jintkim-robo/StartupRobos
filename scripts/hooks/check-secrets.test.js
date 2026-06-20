@@ -233,6 +233,80 @@ describe('check-secrets.js — Bash hook', () => {
     const r = runHook('check-secrets.js', { command: null })
     assert.equal(r.exitCode, 0)
   })
+
+  // ── [P0] バグ再現: .env.local の allowlist が && チェーンでバイパスされる ──
+  // isEnvWrite=true && allowLocal=true → 早期 exit(0)。.env へのシークレット書き込みが未スキャン。
+  it('[P0-BUG] .env へのシークレット書き込み + && .env.local でバイパスされる（既知バグ）', () => {
+    const r = runHook('check-secrets.js', {
+      command: 'echo KEY=sk-ant-api03-AAAAAAAAAAAAAAAAAAAA > .env && echo k > .env.local',
+    })
+    // 現状 exit 0 になる（バグ）。修正後は exit 2 になること。
+    // TODO: fix allowLocal check to only early-exit when .env.local is the ONLY env write target
+    assert.equal(r.exitCode, 2, '[BUG] .env + && .env.local のチェーンでシークレットがバイパスされている')
+  })
+
+  // ── [P1] subdir 配下の .env はブロックされない（設計上の検出漏れ） ──────────
+  it('[P1] サブディレクトリの .env への書き込みは現状ブロックされない（設計上の漏れ）', () => {
+    // isEnvWrite は />\s*\.env/ なので subdir/.env にはマッチしない
+    // セキュリティ改善まではこのテストで漏れを明示する
+    const r = runHook('check-secrets.js', {
+      command: `echo STRIPE=${STRIPE_LIVE} > subdir/.env`,
+    })
+    assert.equal(r.exitCode, 2, '[設計漏れ] subdir/.env がスキャン対象外になっている')
+  })
+
+  // ── [P2] whsec_ / sk_live_ の境界値テスト（check-secrets.js でも確認） ───────
+  it('whsec_ 以降が 19 文字以下はブロックしない', () => {
+    const r = runHook('check-secrets.js', {
+      command: 'git commit -m "whsec_AAAAAAAAAAAAAAAAAAA"', // 19 chars
+    })
+    assert.equal(r.exitCode, 0)
+  })
+
+  it('whsec_ 以降が正確に 20 文字はブロックする', () => {
+    const r = runHook('check-secrets.js', {
+      command: 'git commit -m "whsec_AAAAAAAAAAAAAAAAAAAA"', // 20 chars
+    })
+    assert.equal(r.exitCode, 2)
+  })
+
+  it('sk_live_ 以降が 19 文字以下はブロックしない', () => {
+    const r = runHook('check-secrets.js', {
+      command: 'git commit -m "sk_live_AAAAAAAAAAAAAAAAAAA"', // 19 chars
+    })
+    assert.equal(r.exitCode, 0)
+  })
+
+  it('sk_live_ 以降が正確に 20 文字はブロックする', () => {
+    const r = runHook('check-secrets.js', {
+      command: `git commit -m "${STRIPE_LIVE}"`, // STRIPE_LIVE = sk_live_ + 24 chars
+    })
+    assert.equal(r.exitCode, 2)
+  })
+
+  // ── [P2] gho_ 境界値（check-secrets.js での確認）─────────────────────────────
+  it('gho_ 以降が 29 文字以下はブロックしない', () => {
+    const r = runHook('check-secrets.js', {
+      command: 'git commit -m "gho_AAAAAAAAAAAAAAAAAAAAAAAAAAAAA"', // 29 chars
+    })
+    assert.equal(r.exitCode, 0)
+  })
+
+  it('gho_ 以降が正確に 30 文字はブロックする', () => {
+    const r = runHook('check-secrets.js', {
+      command: 'git commit -m "gho_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"', // 30 chars
+    })
+    assert.equal(r.exitCode, 2)
+  })
+
+  // ── [P3] .env.local への append (>>) は許可される ────────────────────────────
+  it('.env.local への >> (append) は .env.local 許可ロジックに含まれ通過する', () => {
+    // >> も isEnvWrite にマッチ (/>\s*\.env/)、かつ allowLocal にもマッチ → exit 0
+    const r = runHook('check-secrets.js', {
+      command: 'echo "ANTHROPIC_API_KEY=sk-ant-api03-AAAAAAAAAAAAAAAAAAAAAAAAAAAA" >> .env.local',
+    })
+    assert.equal(r.exitCode, 0, '.env.local への append も許可すべき')
+  })
 })
 
 // ── check-secrets-write.js (Write/Edit hook) ─────────────────────────────────
