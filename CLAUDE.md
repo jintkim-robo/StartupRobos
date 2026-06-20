@@ -102,18 +102,38 @@ Once you get user approval, everything becomes **fully autonomous**. Don't ask f
 
 ## Business Templates
 
-### Starter 3 Templates (Zero Initial Investment, Minimal Human Intervention)
+### Active Playbook (Notion: Small Digital Business Playbook — updated 2026-06)
 
-| Template | Description | Revenue Model |
-|---|---|---|
-| **affiliate_seo** | Produce multilingual SEO articles, comparison/review sites | Affiliate commissions |
-| **digital_product** | Sell templates/ebooks/prompt sets on Gumroad | Direct sales |
-| **game_ads** | Generate HTML5 games → Deploy → AdSense | Ad revenue |
+CEO Agent selects 3 from the table below based on operator language × country. Prefer the highest-ranked options unless a specific language/region clearly favors another combination.
 
-### Synergy Expansion (After Success)
-- affiliate → Newsletter (Substack)
-- digital_product → YouTube automation
-- game → Print on Demand (Suzuri)
+| Rank | Template | Description | Revenue Model | AI Leverage |
+|---|---|---|---|---|
+| 🥇 1 | **ai_video** | AI video/audio editing, podcast production, multilingual dubbing | Per-project / retainer (~$50–200/video) | Descript, CapCut AI, ElevenLabs — 80%+ automated |
+| 🥈 2 | **ai_localization** | Specialized localization for NGOs, SMEs, and immigrant documents | Per-package ($200–500) | DeepL + Claude + human QA layer |
+| 🥉 3 | **ai_agency** | AI/RPA workflow automation + context engineering workshops for SMEs | Setup fee + retainer ($300–1,200) | Make.com + Claude — zero code required |
+| 4 | **ai_annotation** | AI data annotation / RLHF on DataAnnotation.tech, Outlier AI | Platform pay ($15–40/hr; multilingual premium) | Native language fluency is a direct moat |
+| 5 | **ai_tutoring** | Native-language tutoring with AI-generated lesson plans on italki/Preply | Per-session / subscription | Claude generates plans, summaries, and parent reports |
+
+**Selection guidance for CEO Agent**:
+- Multilingual operators (Arabic, Somali, Burmese, Dari, Ukrainian, etc.) → prioritize `ai_annotation` + `ai_localization` (language premium is real and confirmed on Upwork +154% YoY)
+- Japan / East Asia → `ai_tutoring` (English ↔ target-language pair) + `ai_video` (short-form repurposing market)
+- MENA / Africa / South Asia → `ai_localization` + `ai_annotation` + `ai_agency` (NGO and SME demand)
+- Always pick exactly 3. Avoid starting with more than one service business at the same time to keep CXO focus.
+
+### Deprioritized (keep for existing operators; do not recommend to new operators)
+
+| Template | Reason |
+|---|---|
+| **affiliate_seo** | Google AI Overviews cutting organic traffic 30–60%; broad SEO plays are high-risk |
+| **digital_product** | Saturated; only viable with genuine domain expertise and niche curation |
+| **game_ads** | Low RPM, high effort, marginal AI leverage |
+
+### Synergy Expansion (After First Business Generates Revenue)
+- `ai_video` → multilingual YouTube channel or social media management retainer
+- `ai_localization` → certified translation partnerships or immigration document tooling
+- `ai_agency` → monthly-retainer micro-SaaS tool (Lovable + Supabase, zero code)
+- `ai_annotation` → premium domain QA (legal, medical) at $40–100+/hr
+- `ai_tutoring` → group classes, AI-generated curriculum packs sold as digital products
 
 ## Autonomous Operation Rules (CRITICAL)
 
