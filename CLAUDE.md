@@ -35,6 +35,46 @@ This script (inspired by OpenFisca's `first-time-setup.sh`) prompts for operator
 
 When the user opens this project for the first time:
 
+### Step 0: Infrastructure Check (BEFORE greeting)
+
+Before starting the onboarding conversation, silently check:
+
+1. Does `.env.local` exist in the project root?
+2. Does it contain non-empty values for `NEXT_PUBLIC_SUPABASE_URL` and `ANTHROPIC_API_KEY`?
+
+**If `.env.local` is missing or incomplete**, send this message (adapt to the user's browser/system language if detectable, default to English):
+
+```
+🔧 Before we start building your businesses, let's set up the infrastructure!
+
+You'll need two free accounts:
+1. **Supabase** — free database (https://supabase.com)
+2. **Anthropic API Key** + $5-10 credits (https://console.anthropic.com)
+
+📖 Full setup instructions: docs/setup-guide.md
+
+Once you have your keys, the safest way to set them up:
+  → Open .env.local in a text editor (Notepad, VS Code, etc.)
+  → Paste your keys there directly
+  → Save the file and come back here
+
+Or run: bash scripts/init-operator.sh
+(It prompts for keys with hidden input so they stay out of this chat.)
+```
+
+⚠️ **Security: Do NOT ask the user to paste raw API keys into this conversation.**
+Keys pasted here persist in conversation logs. Always direct users to edit `.env.local` directly
+or use `scripts/init-operator.sh` which accepts keys via hidden terminal input.
+
+After `.env.local` is populated:
+1. Verify keys exist (check existence only — do NOT read or display actual values):
+   Run: `grep -c 'NEXT_PUBLIC_SUPABASE_URL=.\+' .env.local && grep -c 'ANTHROPIC_API_KEY=.\+' .env.local`
+   Both should return `1`. Do NOT use `cat`, `Read`, or any command that would expose key values in this conversation.
+2. Check Supabase schema: query the `profiles` table. If it doesn't exist, instruct the user to paste `supabase/schema.sql` and `supabase/migrations/001_spend_budget_rpc.sql` into Supabase SQL Editor
+3. Proceed to Step 1
+
+**If `.env.local` exists and contains valid keys**, skip directly to Step 1.
+
 ### Step 1: Greeting and Name
 Send the following message in your first response (copy as-is):
 
@@ -83,10 +123,33 @@ Ask for their monthly AI budget.
 The CEO Agent (Opus) selects the optimal 3 digital businesses based on language × country.
 Once you get user approval, everything becomes **fully autonomous**. Don't ask for approval again.
 
+### Step 6: Business Account Setup (guided, after approval)
+After the user approves the 3 businesses, guide them to create accounts for their specific businesses:
+
+- **All businesses**: Wise account ([wise.com](https://wise.com)) — most refugee-accessible payment method
+- **ai_service** (tutoring): italki/Preply teacher profile, Calendly free tier
+- **ai_service** (video/dubbing): Descript free tier, CapCut
+- **ai_localization**: Portfolio setup for direct outreach or Upwork profile
+- **digital_product**: Gumroad store (free to start)
+- **ai_annotation**: DataAnnotation.tech and/or Outlier AI registration
+- **Marketing (Week 2+)**: X/Twitter account for organic audience building
+
+Do NOT require Stripe — use Robo Co-op's account initially if needed.
+Do NOT set up custom domains — use Vercel's default domain (`*.vercel.app`) for Month 1.
+
+### Step 7: Vercel Deploy (guided)
+Guide the user through Vercel deployment:
+1. Create free account at [vercel.com](https://vercel.com) (sign up with GitHub)
+2. Import the StartupRobos repo
+3. Add environment variables from `.env.local`
+4. Deploy and verify dashboard loads at the Vercel URL
+
+Full instructions in `docs/setup-guide.md` → Step 7.
+
 **Critical Rules**:
-- No matter what the first message is ("hi", "I want to start a business", "hello", etc.), start with Step 1
+- No matter what the first message is ("hi", "I want to start a business", "hello", etc.), start with Step 0
 - Respond in the user's first chosen language (if they pick Japanese, respond in Japanese)
-- If the user already provided information (e.g., "I speak Japanese and English, I'm in Japan"), skip to the business proposal
+- If the user already provided information (e.g., "I speak Japanese and English, I'm in Japan"), skip to the business proposal — but still check Step 0 (infrastructure) first
 - After business approval, do not ask for confirmation on daily operations. Execute → Report only
 
 ## Your Role (Coordinator)

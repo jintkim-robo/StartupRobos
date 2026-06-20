@@ -25,20 +25,25 @@ Claude Code opens and asks what languages you speak. The CEO (Opus) picks 3 star
 
 | Type | What | Revenue |
 |------|------|---------|
-| Affiliate/SEO | Multi-language review sites | Affiliate commissions |
-| Digital Products | Templates, ebooks on Gumroad | Direct sales |
-| Games + Ads | HTML5 games with AdSense | Ad revenue |
+| AI Video / Audio | Podcast production, dubbing, video editing | Per-project fees |
+| AI Localization | Translation, document localization for NGOs/SMEs | Per-package fees |
+| AI Agency / RPA | Workflow automation, context engineering workshops | Setup + retainer |
+| AI Annotation | RLHF/data labeling — multilingual premium | Platform hourly pay |
+| AI Tutoring | Native-language tutoring with AI lesson plans | Per-session fees |
 
-New business types can be added by the CEO agent or proposed by you. They live under `businesses/` in your instance.
+The CEO agent picks the best 3 based on your languages and country. See the [Small Digital Business Playbook](https://app.notion.com/p/Small-Digital-Business-Playbook-3615a7e135d280e2ad8add459923ff4d) for the latest market analysis. Business code lives under `businesses/` in your instance.
 
 ---
 
 ## Requirements
 
-- [Claude Code](https://claude.ai/download) (`npm i -g @anthropic-ai/claude-code`)
-- Anthropic API key ([console.anthropic.com](https://console.anthropic.com/))
+- [Claude Desktop](https://claude.ai/download) (or Claude Code CLI: `npm i -g @anthropic-ai/claude-code`)
+- Claude Pro subscription ($20/month) — [claude.ai](https://claude.ai)
+- Anthropic API key ([console.anthropic.com](https://console.anthropic.com/)) — $5-10 credits to start
 - GitHub account
 - Free tier works for: Supabase, Vercel, Gumroad
+
+> **First time?** Follow the **[Setup Guide](docs/setup-guide.md)** — it walks you through everything from zero, including Claude Desktop, GitHub, Supabase, Vercel, and secure key management.
 
 ---
 
