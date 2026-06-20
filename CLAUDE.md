@@ -35,6 +35,44 @@ This script (inspired by OpenFisca's `first-time-setup.sh`) prompts for operator
 
 When the user opens this project for the first time:
 
+### Step 0: Infrastructure Check (BEFORE greeting)
+
+Before starting the onboarding conversation, silently check:
+
+1. Does `.env.local` exist in the project root?
+2. Does it contain non-empty values for `NEXT_PUBLIC_SUPABASE_URL` and `ANTHROPIC_API_KEY`?
+
+**If `.env.local` is missing or incomplete**, send this message (adapt to the user's browser/system language if detectable, default to English):
+
+```
+🔧 Before we start building your businesses, let's set up the infrastructure!
+
+You'll need two free accounts:
+1. **Supabase** — free database (https://supabase.com)
+2. **Anthropic API Key** + $5-10 credits (https://console.anthropic.com)
+
+📖 Full setup instructions: docs/setup-guide.md
+
+Once you have your keys, the safest way to set them up:
+  → Open .env.local in a text editor (Notepad, VS Code, etc.)
+  → Paste your keys there directly
+  → Save the file and come back here
+
+Or run: bash scripts/init-operator.sh
+(It prompts for keys with hidden input so they stay out of this chat.)
+```
+
+⚠️ **Security: Do NOT ask the user to paste raw API keys into this conversation.**
+Keys pasted here persist in conversation logs. Always direct users to edit `.env.local` directly
+or use `scripts/init-operator.sh` which accepts keys via hidden terminal input.
+
+After `.env.local` is populated:
+1. Verify it contains the required values (`NEXT_PUBLIC_SUPABASE_URL`, `ANTHROPIC_API_KEY`)
+2. Check Supabase schema: query the `profiles` table. If it doesn't exist, instruct the user to paste `supabase/schema.sql` and `supabase/migrations/001_spend_budget_rpc.sql` into Supabase SQL Editor
+3. Proceed to Step 1
+
+**If `.env.local` exists and contains valid keys**, skip directly to Step 1.
+
 ### Step 1: Greeting and Name
 Send the following message in your first response (copy as-is):
 
@@ -83,10 +121,33 @@ Ask for their monthly AI budget.
 The CEO Agent (Opus) selects the optimal 3 digital businesses based on language × country.
 Once you get user approval, everything becomes **fully autonomous**. Don't ask for approval again.
 
+### Step 6: Business Account Setup (guided, after approval)
+After the user approves the 3 businesses, guide them to create accounts for their specific businesses:
+
+- **All businesses**: Wise account ([wise.com](https://wise.com)) — most refugee-accessible payment method
+- **ai_service** (tutoring): italki/Preply teacher profile, Calendly free tier
+- **ai_service** (video/dubbing): Descript free tier, CapCut
+- **ai_localization**: Portfolio setup for direct outreach or Upwork profile
+- **digital_product**: Gumroad store (free to start)
+- **ai_annotation**: DataAnnotation.tech and/or Outlier AI registration
+- **Marketing (Week 2+)**: X/Twitter account for organic audience building
+
+Do NOT require Stripe — use Robo Co-op's account initially if needed.
+Do NOT set up custom domains — use Vercel's default domain (`*.vercel.app`) for Month 1.
+
+### Step 7: Vercel Deploy (guided)
+Guide the user through Vercel deployment:
+1. Create free account at [vercel.com](https://vercel.com) (sign up with GitHub)
+2. Import the StartupRobos repo
+3. Add environment variables from `.env.local`
+4. Deploy and verify dashboard loads at the Vercel URL
+
+Full instructions in `docs/setup-guide.md` → Step 7.
+
 **Critical Rules**:
-- No matter what the first message is ("hi", "I want to start a business", "hello", etc.), start with Step 1
+- No matter what the first message is ("hi", "I want to start a business", "hello", etc.), start with Step 0
 - Respond in the user's first chosen language (if they pick Japanese, respond in Japanese)
-- If the user already provided information (e.g., "I speak Japanese and English, I'm in Japan"), skip to the business proposal
+- If the user already provided information (e.g., "I speak Japanese and English, I'm in Japan"), skip to the business proposal — but still check Step 0 (infrastructure) first
 - After business approval, do not ask for confirmation on daily operations. Execute → Report only
 
 ## Your Role (Coordinator)
@@ -102,18 +163,38 @@ Once you get user approval, everything becomes **fully autonomous**. Don't ask f
 
 ## Business Templates
 
-### Starter 3 Templates (Zero Initial Investment, Minimal Human Intervention)
+### Active Playbook (Notion: Small Digital Business Playbook — updated 2026-06)
 
-| Template | Description | Revenue Model |
-|---|---|---|
-| **affiliate_seo** | Produce multilingual SEO articles, comparison/review sites | Affiliate commissions |
-| **digital_product** | Sell templates/ebooks/prompt sets on Gumroad | Direct sales |
-| **game_ads** | Generate HTML5 games → Deploy → AdSense | Ad revenue |
+CEO Agent selects 3 from the table below based on operator language × country. Prefer the highest-ranked options unless a specific language/region clearly favors another combination.
 
-### Synergy Expansion (After Success)
-- affiliate → Newsletter (Substack)
-- digital_product → YouTube automation
-- game → Print on Demand (Suzuri)
+| Rank | Template | Description | Revenue Model | AI Leverage |
+|---|---|---|---|---|
+| 🥇 1 | **ai_video** | AI video/audio editing, podcast production, multilingual dubbing | Per-project / retainer (~$50–200/video) | Descript, CapCut AI, ElevenLabs — 80%+ automated |
+| 🥈 2 | **ai_localization** | Specialized localization for NGOs, SMEs, and immigrant documents | Per-package ($200–500) | DeepL + Claude + human QA layer |
+| 🥉 3 | **ai_agency** | AI/RPA workflow automation + context engineering workshops for SMEs | Setup fee + retainer ($300–1,200) | Make.com + Claude — zero code required |
+| 4 | **ai_annotation** | AI data annotation / RLHF on DataAnnotation.tech, Outlier AI | Platform pay ($15–40/hr; multilingual premium) | Native language fluency is a direct moat |
+| 5 | **ai_tutoring** | Native-language tutoring with AI-generated lesson plans on italki/Preply | Per-session / subscription | Claude generates plans, summaries, and parent reports |
+
+**Selection guidance for CEO Agent**:
+- Multilingual operators (Arabic, Somali, Burmese, Dari, Ukrainian, etc.) → prioritize `ai_annotation` + `ai_localization` (language premium is real and confirmed on Upwork +154% YoY)
+- Japan / East Asia → `ai_tutoring` (English ↔ target-language pair) + `ai_video` (short-form repurposing market)
+- MENA / Africa / South Asia → `ai_localization` + `ai_annotation` + `ai_agency` (NGO and SME demand)
+- Always pick exactly 3. Avoid starting with more than one service business at the same time to keep CXO focus.
+
+### Deprioritized (keep for existing operators; do not recommend to new operators)
+
+| Template | Reason |
+|---|---|
+| **affiliate_seo** | Google AI Overviews cutting organic traffic 30–60%; broad SEO plays are high-risk |
+| **digital_product** | Saturated; only viable with genuine domain expertise and niche curation |
+| **game_ads** | Low RPM, high effort, marginal AI leverage |
+
+### Synergy Expansion (After First Business Generates Revenue)
+- `ai_video` → multilingual YouTube channel or social media management retainer
+- `ai_localization` → certified translation partnerships or immigration document tooling
+- `ai_agency` → monthly-retainer micro-SaaS tool (Lovable + Supabase, zero code)
+- `ai_annotation` → premium domain QA (legal, medical) at $40–100+/hr
+- `ai_tutoring` → group classes, AI-generated curriculum packs sold as digital products
 
 ## Autonomous Operation Rules (CRITICAL)
 

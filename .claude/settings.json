@@ -23,6 +23,11 @@
         "matcher": "Bash",
         "type": "command",
         "command": "node scripts/hooks/check-secrets.js"
+      },
+      {
+        "matcher": "Write|Edit",
+        "type": "command",
+        "command": "node scripts/hooks/check-secrets-write.js"
       }
     ],
     "PostToolUse": [
