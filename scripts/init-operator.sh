@@ -47,7 +47,7 @@ fi
 
 # -------- Prompt: operator identity --------
 read -r -p "Your name (how should the AI call you?): " OPERATOR_NAME
-read -r -p "Your email (for CEO daily reports) [NOTIFY_EMAIL]: " OPERATOR_EMAIL
+read -r -p "Your email (for daily revenue reports) [NOTIFY_EMAIL]: " OPERATOR_EMAIL
 read -r -p "Monthly AI budget in USD: " MONTHLY_BUDGET
 if [[ -z "$MONTHLY_BUDGET" ]]; then
   red "Monthly budget is required."
@@ -124,7 +124,7 @@ This is an instance of [StartupRobos](https://github.com/Robo-Co-op/StartupRobos
 ## Next steps
 1. Run Supabase schema: paste \`supabase/schema.sql\` + \`supabase/migrations/001_spend_budget_rpc.sql\` into Supabase SQL Editor
 2. Deploy to Vercel: \`npx vercel\` then \`npx vercel env add\` for each var in \`.env.local\`
-3. Open Claude Code: \`claude\` — the AI will pick your 3 businesses
+3. Open Claude Code: \`claude\` — the AI will help you pick ONE live revenue experiment
 
 ## Staying up to date
 \`\`\`bash

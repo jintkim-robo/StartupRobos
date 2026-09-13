@@ -6,7 +6,7 @@ vi.mock('@/lib/auth', () => ({
   requireCronAuth: vi.fn(() => null),
 }))
 vi.mock('@/lib/agent/heartbeatRunner', () => ({
-  runHeartbeatTask: vi.fn().mockResolvedValue({ content: 'CXO suggestions', costUsd: 0.02 }),
+  runHeartbeatTask: vi.fn().mockResolvedValue({ content: 'role suggestions', costUsd: 0.02 }),
 }))
 vi.mock('@/lib/supabase/server', () => ({
   createServiceClient: vi.fn(() => ({
@@ -14,9 +14,9 @@ vi.mock('@/lib/supabase/server', () => ({
       select: vi.fn(() => ({
         eq: vi.fn().mockResolvedValue({
           data: [
-            { id: 's1', name: 'AI Tool Lab', business_type: 'affiliate_seo' },
-            { id: 's2', name: 'Prompt Pack', business_type: 'digital_product' },
-            { id: 's3', name: 'Puzzle Games', business_type: 'game_ads' },
+            { id: 's1', name: 'Live QA', business_type: 'human_qa' },
+            { id: 's2', name: 'Data Ops Pilot', business_type: 'data_ops' },
+            { id: 's3', name: 'Niche Automation', business_type: 'vertical_automation' },
           ],
           error: null,
         }),
@@ -38,15 +38,15 @@ describe('GET /api/heartbeat/cxo', () => {
     vi.clearAllMocks()
   })
 
-  it('returns ok with results for all CXO tasks', async () => {
+  it('returns ok with results for role tasks', async () => {
     const res = await GET(makeRequest())
     const json = await res.json()
     expect(json.ok).toBe(true)
-    expect(json.results).toHaveLength(5) // 3 business + 2 cross-functional
+    expect(json.results).toHaveLength(5) // 3 offer tasks + 2 cross-role
     expect(json.total_cost_usd).toBe(0.1) // 5 * 0.02
   })
 
-  it('calls runHeartbeatTask 5 times (3 business + 2 cross-functional)', async () => {
+  it('calls runHeartbeatTask 5 times (3 offer + 2 cross-role)', async () => {
     await GET(makeRequest())
     expect(runHeartbeatTask).toHaveBeenCalledTimes(5)
   })

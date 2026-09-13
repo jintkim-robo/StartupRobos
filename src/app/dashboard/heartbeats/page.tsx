@@ -19,7 +19,7 @@ export default async function HeartbeatsPage() {
     <Box style={{ flex: 1 }}>
       <PageHeader
         title="Heartbeats"
-        subtitle={`${runs.length} heartbeat runs (CEO daily + CxO tasks)`}
+        subtitle={`${runs.length} heartbeat runs (Coordinator daily + role tasks)`}
       />
       <Container size="4" px="6" py="5">
         {runs.length === 0 ? (

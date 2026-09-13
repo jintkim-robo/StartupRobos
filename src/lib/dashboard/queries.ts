@@ -10,11 +10,11 @@ export interface AgentRole {
 }
 
 export const AGENT_ROLES: Record<string, AgentRole> = {
-  ceo: { label: 'CEO', model: 'claude-opus-4-6', accent: 'amber' },
-  cto: { label: 'CTO', model: 'claude-sonnet-4-6', accent: 'blue' },
-  cmo: { label: 'CMO', model: 'claude-sonnet-4-6', accent: 'pink' },
-  coo: { label: 'COO', model: 'claude-sonnet-4-6', accent: 'orange' },
-  cfo: { label: 'CFO', model: 'claude-sonnet-4-6', accent: 'green' },
+  ceo: { label: 'Revenue Coordinator', model: 'claude-opus-4-6', accent: 'amber' },
+  cto: { label: 'Builder', model: 'claude-sonnet-4-6', accent: 'blue' },
+  cmo: { label: 'Scout', model: 'claude-sonnet-4-6', accent: 'pink' },
+  coo: { label: 'Operator', model: 'claude-sonnet-4-6', accent: 'orange' },
+  cfo: { label: 'Seller', model: 'claude-sonnet-4-6', accent: 'green' },
 }
 
 // --- Helpers ---

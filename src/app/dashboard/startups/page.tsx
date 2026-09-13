@@ -53,7 +53,7 @@ export default async function StartupsIndexPage() {
       <div className="px-6 py-4 border-b border-[#1c1c22] flex items-center justify-between shrink-0">
         <div>
           <h1 className="text-[15px] font-semibold tracking-tight">Startups</h1>
-          <p className="text-[11px] text-zinc-600 mt-0.5">All businesses in autonomous operation</p>
+          <p className="text-[11px] text-zinc-600 mt-0.5">Live experiment + parked hypotheses</p>
         </div>
         <div className="flex items-center gap-3 text-[11px] text-zinc-600 font-mono">
           <span>{startups.length} projects</span>

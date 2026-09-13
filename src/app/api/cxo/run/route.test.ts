@@ -81,6 +81,6 @@ describe('POST /api/cxo/run', () => {
 
     expect(res.status).toBe(500)
     const json = await res.json()
-    expect(json.error).toBe('An error occurred during the CXO meeting')
+    expect(json.error).toBe('An error occurred during the revenue council meeting')
   })
 })

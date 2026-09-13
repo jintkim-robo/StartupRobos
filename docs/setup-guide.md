@@ -23,7 +23,7 @@ Claude Desktop is the AI assistant that runs your entire startup operation.
 3. Create an Anthropic account if you don't have one
 4. Subscribe to **Claude Pro** ($20/month) — this gives you access to Claude Code, which powers StartupRobos
 
-> **Why Claude Pro?** The free tier has limited usage. Pro gives you enough capacity to run 3 businesses with daily AI operations.
+> **Why Claude Pro?** The free tier has limited usage. Pro gives you enough capacity to run your live revenue experiment with daily AI operations.
 
 ---
 
@@ -92,7 +92,7 @@ Supabase stores your business data, experiments, and agent activity.
 
 ## Step 5: Anthropic API Key (5 min)
 
-This key lets your AI agents (CEO, CTO, CMO, etc.) work autonomously.
+This key lets your AI roles (Scout, Seller, Builder, Operator, Revenue Coordinator) draft and operate — with human approval gates.
 
 1. Go to [console.anthropic.com](https://console.anthropic.com)
 2. Sign in with the same account you use for Claude Desktop
@@ -174,13 +174,13 @@ Vercel hosts your dashboard and runs your AI agents on a schedule.
 
 1. Open your Vercel URL (e.g., `https://my-startup.vercel.app`)
 2. You should see the StartupRobos dashboard
-3. The CEO heartbeat cron runs daily — check back tomorrow to see your first report
+3. The Revenue Coordinator heartbeat cron runs daily — check back tomorrow to see your first report
 
 ---
 
 ## Step 8: Business Accounts (Week 1–2)
 
-After the AI picks your 3 businesses, you'll need accounts for specific platforms. The AI will guide you through these, but here's a preview:
+After you approve ONE live revenue experiment, you'll need accounts for that offer. The AI will guide you; here's a preview:
 
 ### For all businesses
 
@@ -296,9 +296,9 @@ When you need to update a key (recommended every 90 days):
 Once everything is deployed:
 
 1. **Claude Desktop greets you** and asks your name, languages, and country
-2. **The CEO Agent (AI) picks 3 businesses** optimized for your language and location
+2. **You approve ONE live revenue experiment** (Core offers: Human QA, Data Ops, vertical automation; $299 discovery)
 3. **You approve the plan** — this is the last decision you need to make
-4. **CXO agents build and run everything** — code, content, deployment, marketing
+4. **Roles scout, sell drafts, deliver, and operate** — with human approval before customer contact / publish / billing / prod
 5. **You receive daily reports** — check your dashboard or email
 6. **Experiments run automatically** — the AI tests hypotheses and adapts
 
@@ -306,4 +306,4 @@ Your only job: read the reports and redirect when you want to.
 
 ---
 
-*This guide is part of [StartupRobos](https://github.com/Robo-Co-op/StartupRobos) — AI CXO Startup Platform for refugees. MIT License.*
+*This guide is part of [StartupRobos](https://github.com/Robo-Co-op/StartupRobos) — Co-op Lab 2.0 Revenue Operator for refugees. MIT License.*

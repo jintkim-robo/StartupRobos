@@ -29,7 +29,7 @@ export default async function InboxPage() {
               Inbox is empty
             </Heading>
             <Text size="2" color="gray" align="center" style={{ maxWidth: 400 }}>
-              Agent messages that need your attention will appear here. For now, daily CEO reports
+              Agent messages that need your attention will appear here. For now, daily revenue reports
               are delivered by email.
             </Text>
           </Flex>

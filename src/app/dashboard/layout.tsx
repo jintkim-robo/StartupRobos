@@ -10,7 +10,7 @@ const overviewItems = [
   { href: '/dashboard/activity', label: 'Live Activity', icon: ActivityIcon, live: true },
   { href: '/dashboard/heartbeats', label: 'Heartbeats', icon: HeartbeatIcon },
   { href: '/dashboard/agents', label: 'Agents', icon: AgentsIcon },
-  { href: '/dashboard/startups', label: 'Startups', icon: StartupsIcon, badge: '3' },
+  { href: '/dashboard/startups', label: 'Experiments', icon: StartupsIcon, badge: '1' },
   { href: '/dashboard/artifacts', label: 'Artifacts', icon: ArtifactsIcon },
   { href: '/dashboard/budget', label: 'Budget', icon: BudgetIcon },
 ]
@@ -21,13 +21,13 @@ const projectLinks = [
   { href: 'https://robo-co-op.github.io/puzzle-games/', label: 'Puzzle Games', color: '#22c55e' },
 ]
 
-const ceo = { href: '/dashboard/agents/ceo', label: 'CEO', model: 'Opus', color: '#f59e0b' }
+const ceo = { href: '/dashboard/agents/ceo', label: 'Revenue Coord.', model: 'Opus', color: '#f59e0b' }
 
-const cxoAgents = [
-  { href: '/dashboard/agents/cto', label: 'CTO', model: 'Sonnet', color: '#3b82f6' },
-  { href: '/dashboard/agents/cmo', label: 'CMO', model: 'Sonnet', color: '#ec4899' },
-  { href: '/dashboard/agents/coo', label: 'COO', model: 'Sonnet', color: '#f97316' },
-  { href: '/dashboard/agents/cfo', label: 'CFO', model: 'Sonnet', color: '#22c55e' },
+const operatorRoles = [
+  { href: '/dashboard/agents/cmo', label: 'Scout', model: 'Sonnet', color: '#ec4899' },
+  { href: '/dashboard/agents/cfo', label: 'Seller', model: 'Sonnet', color: '#22c55e' },
+  { href: '/dashboard/agents/cto', label: 'Builder', model: 'Sonnet', color: '#3b82f6' },
+  { href: '/dashboard/agents/coo', label: 'Operator', model: 'Sonnet', color: '#f97316' },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -113,9 +113,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </div>
 
-          {/* CEO */}
+          {/* Revenue Coordinator */}
           <div>
-            <p className="text-[10px] text-zinc-600 font-semibold px-2 mb-2 uppercase tracking-[0.1em]">CEO</p>
+            <p className="text-[10px] text-zinc-600 font-semibold px-2 mb-2 uppercase tracking-[0.1em]">Coordinator</p>
             <div className="space-y-0.5">
               <AgentLink
                 href={ceo.href}
@@ -127,11 +127,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </div>
 
-          {/* CxO Team */}
+          {/* Role Team */}
           <div>
-            <p className="text-[10px] text-zinc-600 font-semibold px-2 mb-2 uppercase tracking-[0.1em]">CxO Team</p>
+            <p className="text-[10px] text-zinc-600 font-semibold px-2 mb-2 uppercase tracking-[0.1em]">Role Team</p>
             <div className="space-y-0.5">
-              {cxoAgents.map((agent) => (
+              {operatorRoles.map((agent) => (
                 <AgentLink
                   key={agent.label}
                   href={agent.href}
@@ -149,7 +149,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="px-4 py-3 border-t border-[#1c1c22] space-y-2">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse-dot" />
-            <span className="text-[11px] text-zinc-600">CXO Team Active</span>
+            <span className="text-[11px] text-zinc-600">Revenue roles active</span>
           </div>
         </div>
       </aside>

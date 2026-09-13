@@ -23,7 +23,7 @@ describe('agentForTaskType', () => {
 describe('formatTaskType', () => {
   it('returns the task label for known types', () => {
     expect(formatTaskType('pivot_analysis')).toBe('Pivot Analysis')
-    expect(formatTaskType('mvp_spec')).toBe('MVP Specification')
+    expect(formatTaskType('mvp_spec')).toBe('Delivery Spec')
   })
 
   it('returns "Unknown" for null', () => {
