@@ -1,104 +1,78 @@
-# 🚀 MISSION CONTROL — Launchpad
+# 🚀 MISSION CONTROL — Revenue Operator
 
-> Central dashboard for Suzan's 3 active businesses. Updated by the Coordinator.
-> Last updated: 2026-04-23
-
----
-
-## 📋 Active Businesses
-
-| # | Business | Template | Market | Status |
-|---|----------|----------|--------|--------|
-| 1 | **ArabReviews** — أفضل المنتجات | affiliate_seo | MENA (Arabic) | 🟡 Active |
-| 2 | **DigitalSouq** — قوالب ومنتجات رقمية | digital_product | Arabic speakers globally | 🟡 Active |
-| 3 | **AI Sales Buddy (Pronto)** | SaaS | B2B (English + Arabic) | 🟡 Active |
+> Co-op Lab 2.0 Day-1 dashboard: **ONE live revenue experiment** (+ optional parked hypotheses).
+> Updated by the Coordinator. See `docs/COOP_LAB_2.md`.
+> Last updated: 2026-09-13
 
 ---
 
-## 🏢 Business 1 — ArabReviews (affiliate_seo)
+## 📋 Live experiment
 
-**URL**: TBD (to be deployed)
-**Affiliate Programs**: Amazon.eg · Amazon.sa · Noon
-**Language**: Arabic + English
+| # | Experiment | Offer / type | Market | Status |
+|---|------------|--------------|--------|--------|
+| 1 | **Human QA for AI ops output** | human_qa (Core) | Operator’s languages | 🟢 Live |
 
-### Goals
+**KPI:** Time to First $1 (external paying customer preferred for graduation).
+**Flow:** Demand → Sell → Deliver → Automate → SaaS later.
 
-| Function | Current Goal |
-|----------|-------------|
-| **Marketing (CMO)** | Publish 10 Arabic SEO articles targeting high-volume MENA keywords (gadgets, software reviews) |
-| **Tech (CTO)** | Build static site (Next.js or Astro) on Vercel with Arabic RTL support |
-| **Operations (COO)** | Set up affiliate tracking links, auto-publish pipeline, Google Search Console |
-
-### Experiments Queue
-- [ ] Exp #1: Publish 3 Arabic gadget review articles → measure Google indexing speed
-- [ ] Exp #2: Target "أفضل [product]" keywords → measure CTR vs English keywords
-- [ ] Exp #3: Add Amazon.eg affiliate links → measure click-through rate
+Parked hypotheses stay notes-only until the live experiment graduates or is killed — do **not** run three parallel startups on Day 1.
 
 ---
 
-## 🛒 Business 2 — DigitalSouq (digital_product)
+## 🧪 Live — Human QA (Core)
 
-**URL**: Gumroad store (to be created)
-**Products**: Notion templates · Canva templates · AI prompt packs
-**Language**: Arabic + English · Priced in USD
+**Description:** Review / verification of AI or ops output as a sold service (or paid discovery at $299 only).
+**Language:** Operator’s working languages
 
-### Goals
+### Role goals (Co-op Lab 2.0)
 
-| Function | Current Goal |
-|----------|-------------|
-| **Marketing (CMO)** | Create 3 Arabic-language product listings on Gumroad with SEO descriptions |
-| **Tech (CTO)** | Build landing page showcasing products, link to Gumroad checkout |
-| **Operations (COO)** | Set up Gumroad account, Stripe payout, automated delivery |
+| Role | Current goal |
+|------|--------------|
+| **Scout** (`cmo`) | Find buyers with recurring QA / review backlog; capture inbound demand signals |
+| **Seller** (`cfo`) | Draft offer + pricing; outreach only after human approval + evidence |
+| **Builder** (`cto`) | Deliver the sold QA workflow (checklist, rubrics, light tooling) |
+| **Operator** (`coo`) | Schedule delivery, retention loop, note automation candidates after ~3 identical sold runs |
+| **Revenue Coordinator** (`ceo`, thin) | Gate approvals; keep focus on the single live experiment |
 
-### Experiments Queue
-- [ ] Exp #1: List 1 Notion template (Arabic productivity) at $9 → measure conversion rate
-- [ ] Exp #2: Post product on Arabic Twitter/X → measure traffic from social
-- [ ] Exp #3: Bundle 3 templates at $19 vs single at $9 → compare ARPU
+### Experiments queue
 
----
-
-## 🤖 Business 3 — AI Sales Buddy / Pronto (SaaS)
-
-**URL**: https://pronto-ai-sales-buddy.lovable.app/
-**Platform**: Lovable.dev
-**Description**: AI widget automating lead capture and demo booking for B2B companies
-
-### Goals
-
-| Function | Current Goal |
-|----------|-------------|
-| **Marketing (CMO)** | Create landing page copy in English + Arabic; cold outreach sequence for MENA B2B |
-| **Tech (CTO)** | Add pricing page, auth (login/signup), Stripe integration, Arabic UI option |
-| **Operations (COO)** | Set up Stripe, onboarding flow, customer dashboard, usage monitoring |
-
-### Experiments Queue
-- [ ] Exp #1: Add pricing page ($29/$79/$199) → measure signup conversion
-- [ ] Exp #2: Reach out to 10 Egyptian B2B companies → measure demo booking rate
-- [ ] Exp #3: Add Arabic UI toggle → measure engagement from MENA users
+- [ ] Exp #1: Book 1 paid discovery ($299) or first QA engagement → measure Time to First $1
+- [ ] Exp #2: Deliver 3 identical QA workflows → write SOP → automation candidate list
+- [ ] Exp #3: Second paying customer (prefer external) → retention evidence for graduation path
 
 ---
 
-## 📅 Shared Task Schedule
+## 📌 Parked hypotheses (not live)
 
-| Day | Focus Area | Assigned To |
-|-----|-----------|-------------|
-| Mon | Content production (ArabReviews articles) | CMO Agent |
-| Tue | Tech tasks (Pronto features, site builds) | CTO Agent |
-| Wed | Product creation (DigitalSouq listings) | CMO + COO Agents |
-| Thu | SEO & distribution (all 3 businesses) | CMO Agent |
-| Fri | Budget review + experiment evaluation | CFO + CEO Agent |
-| Sat | Deploy, fix, iterate | CTO + COO Agents |
-| Sun | Weekly report + next week planning | CEO Agent → Coordinator |
+| Hypothesis | Notes |
+|------------|-------|
+| Vertical automation niche | Parked — no parallel build/run until live experiment graduates or is killed |
+| Content Factory | Experimental tier — not a Day-1 default |
+| Legacy multi-biz playbooks (affiliate SEO, digital product storefront, SaaS widget) | Historical only; see git history / `businesses/` |
 
 ---
 
-## 💰 Budget Tracker
+## 📅 Weekly schedule (one live experiment)
 
-| Item | Monthly Budget | Spent | Remaining |
-|------|---------------|-------|-----------|
+| Day | Focus | Assigned to |
+|-----|-------|-------------|
+| Mon | Scout: demand signals, niche shortlist | Scout |
+| Tue | Seller: offer draft, pricing, outreach pack (await approval) | Seller |
+| Wed | Builder: delivery assets for the sold workflow | Builder |
+| Thu | Operator: delivery run + evidence pack | Operator |
+| Fri | Budget + experiment eval; kill/park/graduate gate | Seller + Revenue Coord. |
+| Sat | Automate candidates / fix delivery | Builder + Operator |
+| Sun | Weekly report + next-week plan | Revenue Coord. → Coordinator |
+
+---
+
+## 💰 Budget tracker
+
+| Item | Monthly budget | Spent | Remaining |
+|------|----------------|-------|-----------|
 | Total AI budget | $500 | $0 | $500 |
-| CEO Agent (Opus) calls | ~$50 est. | — | — |
-| CXO Agents (Sonnet) | ~$100 est. | — | — |
+| Revenue Coordinator (Opus, sparingly) | ~$50 est. | — | — |
+| Scout / Seller / Builder / Operator (Sonnet) | ~$100 est. | — | — |
 | Research (Haiku) | ~$20 est. | — | — |
 | Tools & hosting | ~$0 (free tier) | — | — |
 
@@ -106,25 +80,25 @@
 
 ---
 
-## 🔗 Key Links
+## 🔗 Key links
 
 | Resource | URL |
 |----------|-----|
-| Pronto (AI Sales Buddy) | https://pronto-ai-sales-buddy.lovable.app/ |
-| Gumroad (DigitalSouq) | TBD |
-| ArabReviews site | TBD |
+| Co-op Lab 2.0 model | `docs/COOP_LAB_2.md` |
+| Role prompts | `AGENTS.md` |
+| TYPE_CONFIG | `src/lib/startup/config.ts` |
 | Supabase dashboard | TBD |
 | Vercel dashboard | TBD |
 
 ---
 
-## 📌 Decision Log
+## 📌 Decision log
 
-| Date | Decision | Made By |
+| Date | Decision | Made by |
 |------|----------|---------|
-| 2026-04-12 | Approved 3 businesses: ArabReviews, DigitalSouq, Pronto | Suzan + CEO |
-| 2026-04-23 | Mission Control activated | Coordinator |
+| 2026-09-13 | Day-1 default → Revenue Operator, **1 live experiment** (not 3 parallel startups) | Co-op Lab 2.0 |
+| 2026-04-23 | Mission Control activated (legacy multi-biz framing retired in docs/UI) | Coordinator |
 
 ---
 
-*This file is maintained by the Coordinator. Updated after each major decision or weekly review.*
+*Maintained by the Coordinator. Updated after each major decision or weekly review.*

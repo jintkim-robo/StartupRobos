@@ -6,7 +6,7 @@ import { timeAgo } from '@/lib/timeAgo'
 import { TASK_AGENT } from '@/lib/agent/roles'
 
 // Artifact Gallery: エージェントが生んだ成果物（レポート・サイト・商品）の画廊
-// 現状は3つの公開サイト + CEO/CXOレポートを時系列Masonry表示
+// Co-op Lab 2.0: live experiment artifacts + role reports (legacy public sites may still appear)
 
 const PUBLIC_SITES = [
   {

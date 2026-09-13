@@ -73,6 +73,22 @@ One-way doors always escalate to the human operator (via thin Revenue Coordinato
 - Robo Co-op can be the **first** distribution or internal buyer.
 - **Graduation** to “validated operator” requires at least one **external paying customer** and a recorded Time-to-First-$1.
 
+## Leftover internals (intentionally kept)
+
+Prefer **not** renaming DB tables/columns or API path segments unless a migration is trivial and safe.
+User-facing labels/prompts use Co-op Lab 2.0 names; runtime keys stay stable.
+
+| Kind | Legacy identifier | Notes |
+|------|-------------------|-------|
+| Table | `cxo_sessions` | Stores council round reports; columns `cto_report`, `cmo_report`, `coo_report`, `cfo_report`, `ceo_decision` |
+| API | `/api/cxo/run`, `/api/heartbeat/cxo` | Route folders keep `cxo` for URL stability |
+| Code | `CXORole`, `CXO_MODELS`, `CXO_SYSTEM_PROMPTS`, `ROLE_DISPLAY` | In `src/lib/agent/cxo.ts`; display map → Scout/Seller/… |
+| Task types | `cxo_cto`, `cxo_cmo`, … | Prefixed in `agent_runs.task_type` |
+| Seeds | `supabase/seed-suzan.sql` | Historical operator; **1 active + 2 paused**. New operators: `supabase/seed-default.sql` |
+| Scripts | `scripts/lib/mission-control.js` | Still accepts legacy business slug aliases for old transcripts |
+
+Do **not** rename these in a drive-by cleanup. Track a dedicated migration if product wants `revenue_sessions` later.
+
 ## See also
 
 - `CONTEXT.md` — glossary + architecture

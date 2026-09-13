@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (!(await checkRateLimit(userId))) {
-    return NextResponse.json({ error: 'CXO meetings limited to 3 per minute' }, { status: 429 })
+    return NextResponse.json({ error: 'Revenue council meetings limited to 3 per minute' }, { status: 429 })
   }
 
   const body = await req.json()
@@ -79,6 +79,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Token budget exhausted' }, { status: 402 })
     }
     console.error('[cxo/run]', err)
-    return NextResponse.json({ error: 'An error occurred during the CXO meeting' }, { status: 500 })
+    return NextResponse.json({ error: 'An error occurred during the revenue council meeting' }, { status: 500 })
   }
 }

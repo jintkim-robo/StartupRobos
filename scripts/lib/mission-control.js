@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Shared utility: update mission_control_data.json from session content.
+ * Co-op Lab 2.0: prefer one live revenue experiment; legacy multi-biz slugs remain for compatibility.
  *
  * Called by:
  *   - scripts/hooks/session-end.js  (after every session)
@@ -20,7 +21,16 @@ const Anthropic = require('@anthropic-ai/sdk')
 const ROOT = path.resolve(__dirname, '../..')
 const MC_FILE = path.join(ROOT, 'mission_control_data.json')
 
+// Index 0 = live experiment slot in mission_control_data.json (Co-op Lab 2.0).
+// Legacy multi-biz slug aliases kept so old transcripts still merge.
 const BUSINESS_SLUGS = {
+  // Live / default Day-1
+  'human qa': 0,
+  human_qa: 0,
+  'patent mining spain': 0,
+  'patent-mining-spain': 0,
+  patentmining: 0,
+  // Legacy aliases (parked / historical)
   arabreviews: 0,
   'arab-reviews': 0,
   'arab reviews': 0,
@@ -47,17 +57,17 @@ Return a JSON object with this exact schema (omit any key that has no data):
 
 {
   "completed_tasks": [
-    { "business": "ArabReviews|DigitalSouq|AI Sales Buddy|null", "task": "short description in Arabic or English", "agent": "CEO|CTO|CMO|COO|CFO|Coordinator" }
+    { "business": "Human QA|Patent Mining Spain|DigitalSouq|AI Sales Buddy|null", "task": "short description in Arabic or English", "agent": "Scout|Seller|Builder|Operator|Revenue Coordinator|Coordinator|CEO|CTO|CMO|COO|CFO" }
   ],
   "experiment_updates": [
-    { "business": "ArabReviews|DigitalSouq|AI Sales Buddy", "experiment_id": 1, "new_status": "pending|running|success|failed", "result": "optional result note" }
+    { "business": "Human QA|Patent Mining Spain|DigitalSouq|AI Sales Buddy", "experiment_id": 1, "new_status": "pending|running|success|failed", "result": "optional result note" }
   ],
   "metric_updates": [
-    { "business": "ArabReviews|DigitalSouq|AI Sales Buddy", "field": "dot.path.to.metric", "value": 123 }
+    { "business": "Human QA|Patent Mining Spain|DigitalSouq|AI Sales Buddy", "field": "dot.path.to.metric", "value": 123 }
   ],
   "budget_delta_usd": 0.00,
   "next_actions": [
-    { "business": "ArabReviews|DigitalSouq|AI Sales Buddy", "action": "what to do next" }
+    { "business": "Human QA|Patent Mining Spain|DigitalSouq|AI Sales Buddy", "action": "what to do next" }
   ]
 }
 
@@ -66,7 +76,8 @@ Rules:
 - experiment_updates: only if an experiment status explicitly changed
 - metric_updates: only measurable numbers that changed (e.g. articles_published, sales_mtd)
 - budget_delta_usd: estimate of API cost spent in this session (0 if unknown)
-- next_actions: the immediate next step for each business mentioned
+- next_actions: the immediate next step for the live experiment (prefer one business; parked hypotheses are notes-only)
+- Prefer Co-op Lab 2.0 agent labels (Scout/Seller/Builder/Operator/Revenue Coordinator); legacy CxO names still accepted
 - If nothing changed for a business, omit it
 - Return valid JSON only, no markdown fences
 
@@ -117,7 +128,7 @@ function applyChanges(data, changes, dateStr, timeStr) {
   // ① completed_tasks
   if (Array.isArray(changes.completed_tasks)) {
     for (const t of changes.completed_tasks) {
-      const entry = { date: dateStr, task: t.task, agent: t.agent ?? 'CTO' }
+      const entry = { date: dateStr, task: t.task, agent: t.agent ?? 'Builder' }
       const idx = resolveBusinessIndex(t.business)
       if (idx >= 0) {
         data.businesses[idx].completed_tasks.unshift(entry)
@@ -125,7 +136,7 @@ function applyChanges(data, changes, dateStr, timeStr) {
         // null / unknown → attach to recent_activity as generic
         data.recent_activity.unshift({
           timestamp: now,
-          agent: t.agent ?? 'CTO',
+          agent: t.agent ?? 'Builder',
           model: 'claude-sonnet-4-6',
           task: t.task,
           business: null,

@@ -1,184 +1,165 @@
 export const dynamic = 'force-dynamic'
 
-const BUSINESSES = [
-  {
-    id: 1,
-    name: 'Patent Mining Spain',
-    nameAr: 'التنقيب في براءات الاختراع — إسبانيا 🇪🇸',
-    template: 'physical_product',
-    templateLabel: 'Physical Product',
-    color: '#ef4444',
-    bg: 'rgba(239, 68, 68, 0.1)',
-    status: 'active',
-    url: null,
-    goals: {
-      marketing: 'تحليل Amazon.es وتحديد المنتجات الأكثر طلباً في فئتي Garden وPet — إنشاء قوائم إسبانية بـ SEO محلي',
-      tech: 'تشغيل USPTO pipeline (Python) → تصفية براءات الاختراع → تقييم Claude → shortlist.csv بأفضل 10 منتجات',
-      operations: 'طلب عينات Alibaba للمنتج الفائز → اختبار الجودة → تجهيز شحن FBA إسبانيا',
-    },
-    experiments: [
-      { id: 1, hypothesis: 'تشغيل pipeline على 200 براءة اختراع USPTO → قياس عدد المنتجات بدرجة 7+', status: 'pending' },
-      { id: 2, hypothesis: 'تحليل top 3 منتجات على Amazon.es → قياس المنافسة والهامش المتوقع', status: 'pending' },
-      { id: 3, hypothesis: 'طلب عينات Alibaba للمنتج الأول → قياس COGS الفعلي مقابل التوقع (€2/unit)', status: 'pending' },
-    ],
+/** Co-op Lab 2.0 — one live revenue experiment (+ parked hypotheses). */
+const LIVE_EXPERIMENT = {
+  id: 1,
+  name: 'Human QA',
+  nameAr: 'مراجعة بشرية لمخرجات الذكاء الاصطناعي',
+  template: 'human_qa',
+  templateLabel: 'Human QA (Core)',
+  color: '#10b981',
+  bg: 'rgba(16, 185, 129, 0.1)',
+  status: 'live',
+  url: null as string | null,
+  goals: {
+    scout: 'اكتشاف مشترين لديهم عبء مراجعة/تحقق متكرر — إشارات طلب واردة',
+    seller: 'مسودة العرض والتسعير؛ تواصل مع العملاء فقط بعد موافقة بشرية + دليل',
+    builder: 'تسليم سير عمل QA المباع (قائمة تحقق، معايير، أدوات خفيفة)',
+    operator: 'جدولة التسليم وحلقة الاحتفاظ؛ مرشحو الأتمتة بعد ~3 عمليات متطابقة',
   },
-  {
-    id: 2,
-    name: 'DigitalSouq',
-    nameAr: 'قوالب ومنتجات رقمية',
-    template: 'digital_product',
-    templateLabel: 'Digital Product',
-    color: '#a855f7',
-    bg: 'rgba(168, 85, 247, 0.1)',
-    status: 'active',
-    url: null,
-    goals: {
-      marketing: 'إنشاء 3 قوائم منتجات عربية على Gumroad مع أوصاف SEO',
-      tech: 'بناء صفحة هبوط تعرض المنتجات مع رابط Gumroad للشراء',
-      operations: 'إعداد حساب Gumroad ودفع Stripe وتسليم تلقائي للمنتجات',
-    },
-    experiments: [
-      { id: 1, hypothesis: 'نشر قالب Notion عربي بـ$9 → قياس نسبة التحويل', status: 'pending' },
-      { id: 2, hypothesis: 'نشر المنتج على Twitter العربي → قياس الزيارات من السوشيال', status: 'pending' },
-      { id: 3, hypothesis: 'باقة 3 قوالب بـ$19 مقابل $9 للقطعة → مقارنة ARPU', status: 'pending' },
-    ],
-  },
-  {
-    id: 3,
-    name: 'AI Sales Buddy',
-    nameAr: 'Pronto',
-    template: 'saas',
-    templateLabel: 'SaaS',
-    color: '#f59e0b',
-    bg: 'rgba(245, 158, 11, 0.1)',
-    status: 'active',
-    url: 'https://pronto-ai-sales-buddy.lovable.app/',
-    goals: {
-      marketing: 'كتابة محتوى الصفحة الرئيسية بالعربية والإنجليزية وتسلسل تواصل للشركات B2B في MENA',
-      tech: 'إضافة صفحة تسعير + تسجيل دخول + Stripe + خيار واجهة عربية',
-      operations: 'إعداد Stripe وتدفق الـ Onboarding ولوحة تحكم العميل والمراقبة',
-    },
-    experiments: [
-      { id: 1, hypothesis: 'إضافة صفحة تسعير ($29/$79/$199) → قياس نسبة التسجيل', status: 'pending' },
-      { id: 2, hypothesis: 'التواصل مع 10 شركات مصرية B2B → قياس حجز الديمو', status: 'pending' },
-      { id: 3, hypothesis: 'إضافة واجهة عربية → قياس تفاعل مستخدمي MENA', status: 'pending' },
-    ],
-  },
+  experiments: [
+    { id: 1, hypothesis: 'حجز اكتشاف مدفوع ($299) أو أول مهمة QA → قياس Time to First $1', status: 'pending' },
+    { id: 2, hypothesis: 'تسليم 3 سير عمل QA متطابقة → كتابة SOP → قائمة أتمتة', status: 'pending' },
+    { id: 3, hypothesis: 'عميل ثانٍ دافع (يفضّل خارجي) → دليل احتفاظ لمسار التخرج', status: 'pending' },
+  ],
+}
+
+const PARKED = [
+  { name: 'Vertical automation niche', nameAr: 'أتمتة عمودية متخصصة', note: 'فرضية موقوفة — بلا بناء/تشغيل موازٍ' },
+  { name: 'Content Factory', nameAr: 'مصنع المحتوى', note: 'Experimental — ليست افتراض Day-1' },
 ]
 
 const WEEKLY_SCHEDULE = [
-  { day: 'الاثنين', focus: 'تشغيل USPTO pipeline + تحليل نتائج Patent Mining', agent: 'CTO' },
-  { day: 'الثلاثاء', focus: 'المهام التقنية (Pronto + بناء المواقع)', agent: 'CTO' },
-  { day: 'الأربعاء', focus: 'إنشاء المنتجات (قوائم DigitalSouq) + تحليل Amazon.es', agent: 'CMO + COO' },
-  { day: 'الخميس', focus: 'SEO والتوزيع (3 مشاريع)', agent: 'CMO' },
-  { day: 'الجمعة', focus: 'مراجعة الميزانية وتقييم التجارب', agent: 'CFO + CEO' },
-  { day: 'السبت', focus: 'النشر والإصلاح والتكرار', agent: 'CTO + COO' },
-  { day: 'الأحد', focus: 'تقرير أسبوعي وتخطيط الأسبوع القادم', agent: 'CEO' },
+  { day: 'الاثنين', focus: 'Scout: إشارات الطلب وقائمة مختصرة لل niches', agent: 'Scout' },
+  { day: 'الثلاثاء', focus: 'Seller: مسودة العرض والتسعير وحزمة التواصل (بانتظار الموافقة)', agent: 'Seller' },
+  { day: 'الأربعاء', focus: 'Builder: أصول التسليم لسير العمل المباع', agent: 'Builder' },
+  { day: 'الخميس', focus: 'Operator: تشغيل التسليم + حزمة الأدلة', agent: 'Operator' },
+  { day: 'الجمعة', focus: 'مراجعة الميزانية وتقييم التجربة (قتل/إيقاف/تخرّج)', agent: 'Seller + Revenue Coord.' },
+  { day: 'السبت', focus: 'مرشحو الأتمتة وإصلاح التسليم', agent: 'Builder + Operator' },
+  { day: 'الأحد', focus: 'تقرير أسبوعي وتخطيط الأسبوع القادم', agent: 'Revenue Coord.' },
 ]
 
 const AGENT_COLORS: Record<string, string> = {
-  CMO: '#ec4899',
-  CTO: '#3b82f6',
-  COO: '#f97316',
-  CFO: '#22c55e',
-  CEO: '#f59e0b',
-  'CMO + COO': '#a855f7',
-  'CTO + COO': '#06b6d4',
-  'CFO + CEO': '#84cc16',
+  Scout: '#ec4899',
+  Seller: '#22c55e',
+  Builder: '#3b82f6',
+  Operator: '#f97316',
+  'Revenue Coord.': '#f59e0b',
+  'Seller + Revenue Coord.': '#84cc16',
+  'Builder + Operator': '#06b6d4',
 }
 
 export default function MissionControlPage() {
+  const biz = LIVE_EXPERIMENT
   return (
     <div className="flex flex-col min-h-0 overflow-auto">
       {/* Header */}
       <div className="px-6 py-4 border-b border-[#1c1c22] flex items-center justify-between shrink-0">
         <div>
           <h1 className="text-[15px] font-semibold tracking-tight">Mission Control</h1>
-          <p className="text-[11px] text-zinc-600 mt-0.5">نظرة شاملة على المشاريع الثلاثة — آخر تحديث: 2026-04-23</p>
+          <p className="text-[11px] text-zinc-600 mt-0.5">
+            Revenue Operator — تجربة إيرادات واحدة مباشرة — آخر تحديث: 2026-09-13
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-[11px] text-zinc-500">3 مشاريع نشطة</span>
+          <span className="text-[11px] text-zinc-500">1 تجربة مباشرة</span>
         </div>
       </div>
 
       <div className="flex-1 px-6 py-5 space-y-6">
-        {/* Businesses */}
-        {BUSINESSES.map((biz, i) => (
-          <div
-            key={biz.id}
-            className="card p-5 space-y-4"
-            style={{ animation: 'fadeIn 0.3s ease-out both', animationDelay: `${i * 60}ms` }}
-          >
-            {/* Business header */}
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold shrink-0"
-                  style={{ backgroundColor: biz.bg, color: biz.color }}
-                >
-                  {biz.id}
+        {/* Live experiment */}
+        <div className="card p-5 space-y-4" style={{ animation: 'fadeIn 0.3s ease-out both' }}>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold shrink-0"
+                style={{ backgroundColor: biz.bg, color: biz.color }}
+              >
+                {biz.id}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-[14px] font-semibold tracking-tight">{biz.name}</h2>
+                  <span className="text-[11px] text-zinc-500">— {biz.nameAr}</span>
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-[14px] font-semibold tracking-tight">{biz.name}</h2>
-                    <span className="text-[11px] text-zinc-500">— {biz.nameAr}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <span
-                      className="text-[9px] px-1.5 py-0.5 rounded font-medium"
-                      style={{ backgroundColor: biz.bg, color: biz.color }}
-                    >
-                      {biz.templateLabel}
-                    </span>
-                    <span className="text-[9px] px-1.5 py-0.5 rounded font-medium bg-green-500/10 text-green-400">
-                      {biz.status}
-                    </span>
-                  </div>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span
+                    className="text-[9px] px-1.5 py-0.5 rounded font-medium"
+                    style={{ backgroundColor: biz.bg, color: biz.color }}
+                  >
+                    {biz.templateLabel}
+                  </span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded font-medium bg-green-500/10 text-green-400">
+                    {biz.status}
+                  </span>
                 </div>
               </div>
-              {biz.url && (
-                <a
-                  href={biz.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[10px] text-zinc-600 hover:text-zinc-300 flex items-center gap-1 transition-colors shrink-0"
-                >
-                  <span className="w-1 h-1 rounded-full bg-green-500/60" />
-                  live
-                  <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              )}
             </div>
+            {biz.url && (
+              <a
+                href={biz.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[10px] text-zinc-600 hover:text-zinc-300 flex items-center gap-1 transition-colors shrink-0"
+              >
+                <span className="w-1 h-1 rounded-full bg-green-500/60" />
+                live
+                <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            )}
+          </div>
 
-            {/* Goals grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-              <GoalCard icon="📣" label="Marketing (CMO)" text={biz.goals.marketing} color={biz.color} />
-              <GoalCard icon="⚙️" label="Tech (CTO)" text={biz.goals.tech} color={biz.color} />
-              <GoalCard icon="🔧" label="Operations (COO)" text={biz.goals.operations} color={biz.color} />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <GoalCard icon="🔎" label="Scout" text={biz.goals.scout} color={biz.color} />
+            <GoalCard icon="💼" label="Seller" text={biz.goals.seller} color={biz.color} />
+            <GoalCard icon="🛠️" label="Builder" text={biz.goals.builder} color={biz.color} />
+            <GoalCard icon="⚙️" label="Operator" text={biz.goals.operator} color={biz.color} />
+          </div>
 
-            {/* Experiments */}
-            <div>
-              <p className="text-[10px] text-zinc-600 font-semibold uppercase tracking-wider mb-2">Experiments</p>
-              <div className="space-y-1.5">
-                {biz.experiments.map((exp) => (
-                  <div key={exp.id} className="flex items-start gap-2.5 px-3 py-2 rounded-md bg-[#111113]">
-                    <span className="text-[9px] font-mono text-zinc-600 mt-0.5 shrink-0">#{exp.id}</span>
-                    <p className="text-[11px] text-zinc-400 flex-1">{exp.hypothesis}</p>
-                    <StatusBadge status={exp.status} />
-                  </div>
-                ))}
-              </div>
+          <div>
+            <p className="text-[10px] text-zinc-600 font-semibold uppercase tracking-wider mb-2">Experiments</p>
+            <div className="space-y-1.5">
+              {biz.experiments.map((exp) => (
+                <div key={exp.id} className="flex items-start gap-2.5 px-3 py-2 rounded-md bg-[#111113]">
+                  <span className="text-[9px] font-mono text-zinc-600 mt-0.5 shrink-0">#{exp.id}</span>
+                  <p className="text-[11px] text-zinc-400 flex-1">{exp.hypothesis}</p>
+                  <StatusBadge status={exp.status} />
+                </div>
+              ))}
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Parked hypotheses */}
+        <div className="card p-5">
+          <p className="text-[10px] text-zinc-600 font-semibold uppercase tracking-wider mb-3">
+            فرضيات موقوفة (ليست مباشرة)
+          </p>
+          <div className="space-y-1.5">
+            {PARKED.map((p) => (
+              <div key={p.name} className="flex items-start gap-2.5 px-3 py-2 rounded-md bg-[#111113]">
+                <span className="text-[9px] px-1.5 py-0.5 rounded font-medium bg-zinc-800 text-zinc-500 shrink-0">
+                  parked
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] text-zinc-300">
+                    {p.name} <span className="text-zinc-600">— {p.nameAr}</span>
+                  </p>
+                  <p className="text-[10px] text-zinc-600 mt-0.5">{p.note}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Weekly Schedule */}
         <div className="card p-5">
-          <p className="text-[10px] text-zinc-600 font-semibold uppercase tracking-wider mb-3">الجدول الأسبوعي المشترك</p>
+          <p className="text-[10px] text-zinc-600 font-semibold uppercase tracking-wider mb-3">
+            الجدول الأسبوعي — تجربة واحدة
+          </p>
           <div className="space-y-1">
             {WEEKLY_SCHEDULE.map((row) => {
               const agentColor = AGENT_COLORS[row.agent] ?? '#6b7280'
@@ -210,7 +191,6 @@ export default function MissionControlPage() {
             <BudgetItem label="المتبقي" value="$500" color="#3b82f6" />
             <BudgetItem label="حد التنبيه" value="$400 (80%)" color="#f59e0b" />
           </div>
-          {/* Progress bar */}
           <div className="mt-4">
             <div className="flex justify-between text-[10px] text-zinc-600 mb-1">
               <span>0% مستخدم</span>

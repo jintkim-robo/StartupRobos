@@ -23,7 +23,7 @@ const projectLinks = [
 
 const ceo = { href: '/dashboard/agents/ceo', label: 'Revenue Coord.', model: 'Opus', color: '#f59e0b' }
 
-const cxoAgents = [
+const operatorRoles = [
   { href: '/dashboard/agents/cmo', label: 'Scout', model: 'Sonnet', color: '#ec4899' },
   { href: '/dashboard/agents/cfo', label: 'Seller', model: 'Sonnet', color: '#22c55e' },
   { href: '/dashboard/agents/cto', label: 'Builder', model: 'Sonnet', color: '#3b82f6' },
@@ -131,7 +131,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div>
             <p className="text-[10px] text-zinc-600 font-semibold px-2 mb-2 uppercase tracking-[0.1em]">Role Team</p>
             <div className="space-y-0.5">
-              {cxoAgents.map((agent) => (
+              {operatorRoles.map((agent) => (
                 <AgentLink
                   key={agent.label}
                   href={agent.href}

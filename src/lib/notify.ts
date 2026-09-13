@@ -40,12 +40,12 @@ export async function sendReport(subject: string, body: string) {
       'Authorization': `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: 'Launchpad CEO <onboarding@resend.dev>',
+      from: 'Launchpad Revenue Coord. <onboarding@resend.dev>',
       to: NOTIFY_EMAILS,
       subject,
       html: `<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #1a1a2e; color: #e0e0e0; border-radius: 12px;">
         <div style="border-bottom: 1px solid #333; padding-bottom: 12px; margin-bottom: 16px;">
-          <h1 style="font-size: 18px; color: #a78bfa; margin: 0;">🚀 Launchpad CEO Report</h1>
+          <h1 style="font-size: 18px; color: #a78bfa; margin: 0;">🚀 Launchpad Revenue Report</h1>
         </div>
         ${html}
         <div style="border-top: 1px solid #333; margin-top: 20px; padding-top: 12px; font-size: 12px; color: #666;">

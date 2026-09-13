@@ -8,7 +8,7 @@ const MAX_SESSIONS = 10;
 const MAX_TOKENS = 800;
 
 const DREAM_SYSTEM_PROMPT = `You are an AI memory synthesizer for a startup run entirely by AI agents.
-Your job is to review past CxO council sessions and extract durable, actionable learnings.
+Your job is to review past Revenue Operator council sessions and extract durable, actionable learnings.
 Output a concise memory entry (max 300 words) structured as:
 1. Recurring themes or challenges (bullet points)
 2. Decisions that worked well (bullet points)
@@ -22,7 +22,7 @@ export interface DreamResult {
 }
 
 /**
- * Dreaming: review past CxO sessions for a startup and synthesize a memory entry.
+ * Dreaming: review past Revenue Operator council sessions and synthesize a memory entry.
  * Returns null if there are no sessions to review.
  */
 export async function runDreaming(
@@ -56,16 +56,16 @@ export async function runDreaming(
       return [
         `### Session ${i + 1} (${date})`,
         `**Agenda:** ${truncate(s.agenda, 200)}`,
-        `**CEO Decision:** ${truncate(s.ceo_decision, 300)}`,
-        `**CTO:** ${truncate(s.cto_report, 150)}`,
-        `**CMO:** ${truncate(s.cmo_report, 150)}`,
-        `**COO:** ${truncate(s.coo_report, 150)}`,
-        `**CFO:** ${truncate(s.cfo_report, 150)}`,
+        `**Revenue Coordinator Decision:** ${truncate(s.ceo_decision, 300)}`,
+        `**Builder (cto):** ${truncate(s.cto_report, 150)}`,
+        `**Scout (cmo):** ${truncate(s.cmo_report, 150)}`,
+        `**Operator (coo):** ${truncate(s.coo_report, 150)}`,
+        `**Seller (cfo):** ${truncate(s.cfo_report, 150)}`,
       ].join("\n");
     })
     .join("\n\n");
 
-  const userPrompt = `Review these ${sessions.length} past CxO council sessions and create a memory entry:\n\n${sessionSummaries}`;
+  const userPrompt = `Review these ${sessions.length} past Revenue Operator council sessions and create a memory entry:\n\n${sessionSummaries}`;
 
   const response = await anthropic.messages.create({
     model: DREAM_MODEL,
