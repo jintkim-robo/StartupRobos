@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# StartupRobos — AI CXO Startup Platform
+# StartupRobos — Co-op Lab 2.0 Revenue Operator
 # Usage: bash <(curl -sL https://raw.githubusercontent.com/Robo-Co-op/StartupRobos/main/start.sh)
 
 set -euo pipefail
@@ -10,7 +10,7 @@ set -euo pipefail
 _READ_TTY="${_READ_TTY:-/dev/tty}"
 
 echo ""
-echo "  StartupRobos — AI CXO Startup Platform"
+echo "  StartupRobos — Co-op Lab 2.0 Revenue Operator"
 echo "  ========================================"
 echo ""
 

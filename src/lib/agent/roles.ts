@@ -1,24 +1,23 @@
-// task_type → エージェント情報の一元管理
-// 全ファイルで共通して参照する定数定義
+// task_type → agent info (Co-op Lab 2.0 display labels; runtime role keys unchanged)
 
 export interface TaskAgentDef {
-  /** 役職ラベル（例: 'CEO', 'CTO'） */
+  /** Display label (Co-op Lab 2.0 role name) */
   label: string
-  /** エージェントカラー（16進数） */
+  /** Agent color (hex) */
   color: string
-  /** URLスラグ用ロール（例: 'ceo', 'cto'） */
+  /** URL slug / runtime role key (ceo|cto|cmo|coo|cfo) */
   role: string
-  /** タスク種別の表示名（例: 'Pivot Analysis'） */
+  /** Task type display name */
   taskLabel: string
 }
 
 export const TASK_AGENT: Record<string, TaskAgentDef> = {
-  pivot_analysis: { label: 'CEO', color: '#f59e0b', role: 'ceo', taskLabel: 'Pivot Analysis' },
-  mvp_spec:       { label: 'CTO', color: '#3b82f6', role: 'cto', taskLabel: 'MVP Specification' },
-  market_research:{ label: 'CMO', color: '#ec4899', role: 'cmo', taskLabel: 'Market Research' },
-  ops_review:     { label: 'COO', color: '#f97316', role: 'coo', taskLabel: 'Operations Review' },
-  budget_review:  { label: 'CFO', color: '#22c55e', role: 'cfo', taskLabel: 'Budget Review' },
-  pivot_decision: { label: 'CEO', color: '#f59e0b', role: 'ceo', taskLabel: 'Pivot Decision' },
-  ceo_review:     { label: 'CEO', color: '#f59e0b', role: 'ceo', taskLabel: 'CEO Review' },
-  cto_review:     { label: 'CTO', color: '#3b82f6', role: 'cto', taskLabel: 'CTO Review' },
+  pivot_analysis: { label: 'Revenue Coordinator', color: '#f59e0b', role: 'ceo', taskLabel: 'Pivot Analysis' },
+  mvp_spec:       { label: 'Builder', color: '#3b82f6', role: 'cto', taskLabel: 'Delivery Spec' },
+  market_research:{ label: 'Scout', color: '#ec4899', role: 'cmo', taskLabel: 'Demand Scout' },
+  ops_review:     { label: 'Operator', color: '#f97316', role: 'coo', taskLabel: 'Operations Review' },
+  budget_review:  { label: 'Seller', color: '#22c55e', role: 'cfo', taskLabel: 'Offer & Pricing' },
+  pivot_decision: { label: 'Revenue Coordinator', color: '#f59e0b', role: 'ceo', taskLabel: 'Pivot Decision' },
+  ceo_review:     { label: 'Revenue Coordinator', color: '#f59e0b', role: 'ceo', taskLabel: 'Revenue Review' },
+  cto_review:     { label: 'Builder', color: '#3b82f6', role: 'cto', taskLabel: 'Builder Review' },
 }

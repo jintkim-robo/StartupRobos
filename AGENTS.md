@@ -1,120 +1,102 @@
-# Agent Team
+# Agent Team (Co-op Lab 2.0 — Revenue Operator)
 
 ## Scope (critical)
 
-This CxO team is shared across **all businesses running inside a single StartupRobos fork**. A new business (Robo Match, OpenCareers, AI Tool Lab, …) does NOT spawn a new agent team — it is a *project* handed to the existing CEO + CxOs.
+This role team is shared across **all experiments running inside a single StartupRobos fork**. A new offer (Human QA, Data Ops, …) does NOT spawn a new agent team — it is a *project* handed to the existing roles.
 
-If you are tempted to "copy the CxO prompts into a new repo for business X," stop. That is an architectural mistake. See `CLAUDE.md` → "Architectural rule".
+If you are tempted to "copy the prompts into a new repo for business X," stop. That is an architectural mistake. See `CLAUDE.md` → "Architectural rule".
+
+Full product rules: **`docs/COOP_LAB_2.md`**.
 
 ## Architecture
 
 ```
-Main Session (Sonnet) = Coordinator
-  ├── CEO Agent (Opus)      → Strategic decisions across all businesses
-  ├── CTO Agent (Sonnet)    → Code generation for whichever business needs it
-  ├── CMO Agent (Sonnet)    → Content / GTM
-  ├── COO Agent (Sonnet)    → Operations / deployment
-  ├── CFO Agent (Sonnet)    → Finance / budget
-  └── Research Agent (Haiku) → Data collection
+Main Session (Sonnet) = Coordinator (human-facing)
+  ├── Revenue Coordinator (Opus, runtime: ceo)  → thin gates / prioritization
+  ├── Scout (Sonnet, runtime: cmo)              → demand
+  ├── Seller (Sonnet, runtime: cfo)             → offers / close path
+  ├── Builder (Sonnet, runtime: cto)            → deliver sold work
+  ├── Operator (Sonnet, runtime: coo)           → run / retain / automate candidates
+  └── QA (human + checklist)                    → evidence before ship
 ```
+
+Runtime keys (`ceo`/`cto`/`cmo`/`coo`/`cfo`) stay stable for DB/API. C-suite titles are **not** the default Day-1 mental model.
+
+## Pipeline
+
+**Demand → Sell → Deliver → Automate → SaaS later** (not Idea → Product → Customer).
+
+Day 1: **ONE live revenue experiment** (+ optional parked hypotheses). Not 3 parallel startups.
 
 ## Routing Guide
 
 | Task | Delegate To | Model |
 |---|---|---|
-| Business selection, pivot decisions, strategy review | CEO Agent | **opus** |
-| Site building, code generation, API integration | CTO Agent | sonnet |
-| SEO articles, landing pages, social media, content strategy | CMO Agent | sonnet |
-| Deployment, environment setup, monitoring, operations | COO Agent | sonnet |
-| Financial calculations, pricing, budget reports | CFO Agent | sonnet |
-| Market research, competitive analysis, data collection | Research Agent | haiku |
+| Approvals, focus, pivot, experiment eval | Revenue Coordinator | **opus** |
+| Demand / niche / inbound signals | Scout | sonnet |
+| Offer, pricing, close path, $299 discovery | Seller | sonnet |
+| Delivery of sold workflow, light tooling | Builder | sonnet |
+| Ops, retention, SOP/automation candidates | Operator | sonnet |
+| Pre-ship evidence / Human QA offer work | QA (human) + Operator checklist | — |
+| Raw data collection only | Research (Haiku) | haiku |
 
-## Delegation Patterns
+## Approvals (mandatory)
 
-Delegation to CXO agents is done via the Agent tool. Provide each agent with:
-1. Business context (name, template, current status)
-2. Specific task instructions
-3. Success criteria
-4. Constraints (budget, deadline)
+No **customer contact / publish / finalize billing / production deploy** without **human approval** and **evidence** (draft, screenshot, quote, log excerpt).
 
 ## Agent Definitions
 
-### CEO (Chief Executive Officer) — Opus
+### Revenue Coordinator — Opus (`ceo`)
 ```
 Model: opus
-Role: Strategic decisions, business selection, pivot decisions, experiment evaluation
-When to call: Only when important decision-making is needed (do not call for daily conversations)
+Role: Thin coordinator — keep ONE live experiment, gate irreversible actions
+When to call: Approvals, pivots, experiment evaluation — not daily chat
 
 Instruction template:
-"You are the CEO of StartupRobos. Analyze the following situation and make a strategic decision.
-Entrepreneur profile: [language, country of residence]
-Current businesses: [status of 3 businesses]
-Decision needed on: [specific question]
-Constraints: $0 initial investment, 100% organic acquisition, monthly budget $[amount]"
+"You are the Revenue Coordinator for StartupRobos (Co-op Lab 2.0).
+Operator profile: [language, country]
+Live experiment: [one]
+Parked hypotheses: [list or none]
+Decision needed: [question]
+Constraints: Time to First $1; $299 = paid discovery only; no prod/customer contact without human approval + evidence."
 ```
 
-### CTO (Chief Technology Officer)
+### Scout (`cmo`)
 ```
 Model: sonnet
-Role: Code generation, site building, technical execution
-When to delegate: When code needs to be written, when building sites or apps, when integrating APIs
-
-Instruction template:
-"You are the CTO of StartupRobos. Execute [task] for the following business.
-Business: [name] ([template])
-Current status: [current situation]
-Success criteria: [what counts as completed]
-Technical constraints: Next.js + Vercel + Supabase. Keep it simple."
+Role: Find demand and buyers for Core offers (Human QA, Data Ops, vertical automation)
+When: Need niches, channels, or to park weak hypotheses
 ```
 
-### CMO (Chief Marketing Officer)
+### Seller (`cfo`)
 ```
 Model: sonnet
-Role: SEO article generation, landing page creation, social media strategy, content production
-When to delegate: When customer acquisition is needed, when creating content, when improving SEO
-
-Instruction template:
-"You are the CMO of StartupRobos. Execute [task] for the following business.
-Business: [name] ([template])
-Target: [language × region niche]
-Acquisition channels: Organic only (SEO, social media, word-of-mouth)
-Success criteria: [goals for traffic, CTR, etc.]"
+Role: Offers, pricing, close path, monetization review
+When: Pricing, outreach drafts (approval before send), paid discovery packaging
 ```
 
-### COO (Chief Operating Officer)
+### Builder (`cto`)
 ```
 Model: sonnet
-Role: Deployment, environment setup, domain configuration, monitoring, schedule management
-When to delegate: When deploying, when setting up infrastructure, when operational tasks are needed
-
-Instruction template:
-"You are the COO of StartupRobos. Execute [task] for the following business.
-Business: [name] ([template])
-Infrastructure: Vercel + Supabase
-Current status: [current situation]
-Success criteria: [deployment complete, zero downtime, etc.]"
+Role: Deliver what was sold — scripts, SOPs, light tooling (not premature SaaS)
+When: Implementation after (or tightly coupled to) a sale
 ```
 
-### CFO (Chief Financial Officer)
+### Operator (`coo`)
 ```
 Model: sonnet
-Role: Financial calculations, budget tracking, pricing, revenue reporting
-When to delegate: When reviewing finances, when setting prices, when budget reports are needed
-
-Instruction template:
-"You are the CFO of StartupRobos. Perform financial analysis for the following business.
-Business: [name] ([template])
-Monthly budget: $[amount]
-Current spending: $[amount]
-Revenue: $[amount]
-Analysis needed on: [specific question]"
+Role: Delivery ops, retention, QA checklist, automation after ~3 identical sold workflows
+When: Running the live experiment day-to-day
 ```
 
-### Researcher (Data Collection Specialist)
+### QA (human-first)
+```
+Role: Evidence before ship; Human QA is also a Core sellable offer
+Agents prepare checklists; humans approve customer-facing and prod actions
+```
+
+### Researcher (Haiku)
 ```
 Model: haiku
-Role: Market research, competitive list creation, keyword extraction, price research
-When to delegate: When data is needed (leave analysis and decision-making to CEO or CXO (Sonnet))
-
-Note: Haiku is for data collection only. Analysis and decision-making should be handled by CEO or CXO (Sonnet).
+Role: Data collection only — analysis stays with Scout/Seller/Coordinator
 ```

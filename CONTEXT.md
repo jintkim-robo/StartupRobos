@@ -1,17 +1,20 @@
 # StartupRobos — Domain Context
 
-## Co-op Lab
+## Co-op Lab 2.0
 
 StartupRobos is the core tool of **Co-op Lab** — a learning program where refugees form 5-person co-ops and run this together.
 
 **Structure:**
 - 5 refugees form a co-op, matched by language/region
-- Each runs StartupRobos to operate 3 digital businesses
+- Each runs StartupRobos as a **Revenue Operator**: **ONE live revenue experiment** on Day 1 (optional parked hypotheses)
 - Co-op shares learnings, supports each other, contributes PRs back
 
+**Product model:** Demand → Sell → Deliver → Automate → SaaS later  
+See **`docs/COOP_LAB_2.md`** (EN + short JA).
+
 **Two-wheel OSS model:**
-- **StartupRobos** (this repo): AI-CXO team runs businesses autonomously
-- **RoboBuilder** (github.com/Robo-Co-op/robobuilder): Claude Code protocol that makes CC 5x faster; 12-week curriculum for refugees to become independent developers
+- **StartupRobos** (this repo): role team runs revenue experiments
+- **RoboBuilder** (github.com/Robo-Co-op/robobuilder): Claude Code protocol; curriculum for refugees to become independent developers
 - Refugees run StartupRobos from day 1, learn RoboBuilder in parallel → graduate as self-sufficient developers
 
 **Foundation model:**
@@ -21,47 +24,48 @@ StartupRobos is the core tool of **Co-op Lab** — a learning program where refu
 
 **Design principle for agents:**
 - Refugee users may have limited technical background → keep UX simple, decisions minimal
-- Language × region drives business personalization (not generic templates)
-- One-way doors (irreversible actions) always require human confirmation
+- Language × region drives offer personalization (not generic templates)
+- One-way doors (irreversible actions) always require human confirmation + evidence
 - Dignity, agency, long-term livelihood — not just income
 
 ## What this project is
 
-StartupRobos (formerly Launchpad) is an AI CXO multi-agent startup platform. Entrepreneurs onboard once; a team of AI agents (CEO, CTO, CMO, COO, CFO) then runs 3 digital businesses autonomously.
+StartupRobos is an AI multi-agent **revenue operator** platform. Entrepreneurs onboard once; roles (Scout → Seller → Builder → Operator → QA + thin Revenue Coordinator) run **one live revenue experiment** at a time. Classic CxO C-suite titles are demoted as the default.
 
 ## Glossary
 
 | Term | Definition | Avoid saying |
 |---|---|---|
-| **Startup** | A digital business being operated by the AI CXO team | "project", "site" |
-| **CXO** | Any of the five AI executive agents (CEO/CTO/CMO/COO/CFO) | "bot", "AI" alone |
-| **Coordinator** | The main session agent (Sonnet) that talks to the user and dispatches CXOs | "orchestrator" |
-| **CEO Agent** | Opus-based agent for strategic decisions (pivot, experiment evaluation, business selection) | — |
-| **Council** | A CXO council run — all 5 CXOs execute in parallel for a given startup | "batch", "parallel agents" |
-| **Heartbeat** | Scheduled autonomous run (cron-based) — CEO heartbeat daily, CXO heartbeat twice daily | "cron job" |
-| **Experiment** | A hypothesis-driven test for a startup, with metric, goal, duration, and result | "task", "feature" |
-| **Pivot** | A strategic decision to change a startup's direction, tracked in `pivot_log` | "change", "update" |
-| **Token budget** | A per-user monthly USD spending cap on Anthropic API calls, tracked in `token_budgets` | "credit", "limit" |
-| **Artifact** | A CXO-generated output (report, site, product) that lives in `agent_runs.result` | "output", "file" |
-| **Handoff** | The inferred relationship when one CXO's run is followed by another on the same startup within 6h | "chain", "dependency" |
-| **agent_run** | A single execution of one CXO on one startup — the core event record in the DB | — |
-| **Business type** | One of: `affiliate_seo`, `digital_product`, `game_ads`, `saas`, `physical_product` | "category", "template" |
-| **Dreaming** | A Haiku-based memory synthesis run that reviews past CxO sessions and extracts durable learnings into a `memory` entry | "summarize", "recap" |
-| **Mission Control** | A dashboard page (`/mission-control`) showing all active businesses, experiments, and CxO status for an operator | "home", "overview" |
+| **Live experiment** | The single active revenue bet (sold or about-to-sell work) | "3 startups", "portfolio" on Day 1 |
+| **Parked hypothesis** | Noted idea with no parallel build/run | "second startup" |
+| **Revenue Coordinator** | Thin Opus role (`ceo` key) for gates and focus | "CEO" as default culture |
+| **Scout / Seller / Builder / Operator** | Day-1 roles (`cmo` / `cfo` / `cto` / `coo` keys) | CTO/CMO/COO/CFO as default labels |
+| **QA** | Human approval + evidence; also a Core offer (Human QA) | "ship without review" |
+| **Coordinator** | Main session agent (Sonnet) that talks to the user | "orchestrator" |
+| **Council** | Parallel role run — Scout/Seller/Builder/Operator then Revenue Coordinator | "batch" |
+| **Heartbeat** | Scheduled autonomous run (cron) | "cron job" alone |
+| **Experiment** | Hypothesis-driven test with metric, goal, duration, result | "task", "feature" |
+| **Pivot** | Change of live experiment direction (`pivot_log`) | "change", "update" |
+| **Token budget** | Per-user monthly USD Anthropic cap (`token_budgets`) | "credit" |
+| **Artifact** | Role output in `agent_runs.result` | "output", "file" |
+| **Core offer** | Human QA, Data Ops, vertical automation; $299 = paid discovery only | inventing new defaults |
+| **Experimental offer** | Content Factory (+ demoted prior playbook types) | Day-1 default |
+| **Time to First $1** | Primary KPI; graduation needs an **external** paying customer | vanity traffic metrics |
+| **Dreaming** | Haiku memory synthesis into `agent_memories` | "summarize" alone |
+| **Mission Control** | Dashboard (`/mission-control`) for operator status | "home" |
 
 ## Key architectural decisions
 
-- **Next.js App Router** (server components by default) + **Supabase** (Postgres + Auth + RLS) + **Anthropic SDK**
-- **Vercel** deployment with cron for heartbeats
-- All agent costs tracked in USD in `agent_runs.cost_usd`
-- RLS enabled on all tables; `createServiceClient()` (service_role) used only server-side
-- Dashboard is internal-only; user authentication via Supabase Auth
-- **Dreaming** (`src/lib/agent/dreaming.ts`): Haiku-based async memory synthesis — runs after council sessions, writes to `agent_memories` table
-- **Mission Control** (`src/app/mission-control/`): operator dashboard auto-updated by Coordinator after each heartbeat
-- **Business types** expanded beyond initial 3: `saas` and `physical_product` added to `TYPE_CONFIG` (`src/lib/startup/config.ts`)
+- **Next.js App Router** + **Supabase** + **Anthropic SDK**
+- **Vercel** cron heartbeats
+- Agent costs in `agent_runs.cost_usd`
+- RLS on; `createServiceClient()` server-side only
+- Runtime role keys unchanged for DB compatibility; display/prompts = Co-op Lab 2.0
+- `TYPE_CONFIG` Core vs Experimental vs Legacy (`src/lib/startup/config.ts`)
 
 ## What's out of scope for agents
 
-- Modifying `supabase/schema.sql` without a corresponding migration file
+- Modifying `supabase/schema.sql` without a corresponding migration
 - Writing to `memory/` directly (managed by hooks)
-- Creating new CXO roles beyond the 5 defined in `cxo.ts`
+- Renaming DB role keys / `cxo_sessions` columns without a migration
+- Customer contact, publish, finalize billing, or prod deploy without human approval + evidence

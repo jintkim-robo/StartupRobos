@@ -1,6 +1,10 @@
 # StartupRobos
 
-AI team that builds and runs businesses for you. You just talk.
+AI team that helps you **sell and deliver** revenue work. You talk; agents scout, sell drafts, build deliveries, and operate — with human approvals.
+
+**Co-op Lab 2.0:** Demand → Sell → Deliver → Automate → SaaS later.  
+Day 1 = **ONE live revenue experiment** (not 3 parallel startups).  
+Details: [`docs/COOP_LAB_2.md`](docs/COOP_LAB_2.md).
 
 ## 3 Steps
 
@@ -8,30 +12,38 @@ AI team that builds and runs businesses for you. You just talk.
 2. **Open it in [Claude Code](https://claude.ai/download)**
 3. **Say:** _"I want to startup. https://github.com/YourUserName/StartupRobos/"_
 
-Done. The AI picks businesses, sets up infra, and starts building.
+Done. The AI helps you pick **one** Core offer experiment, set up infra, and start the revenue loop.
 
 > ⚠️ **Don't work directly in the upstream `Robo-Co-op/StartupRobos` repo.**
-> That's the framework. Your businesses live in *your* template instance. See [Why?](#why-use-this-template-not-fork-or-clone) below.
+> That's the framework. Your experiments live in *your* template instance. See [Why?](#why-use-this-template-not-fork-or-clone) below.
 
-📘 For the latest Small Digital Business Playbooks and operator guides, see [Co-op Lab on Notion](https://robocoop.notion.site/cooplab).
+📘 Playbooks and operator guides: [Co-op Lab on Notion](https://robocoop.notion.site/cooplab).
 
 ---
 
 ## What happens next
 
-Claude Code opens and asks what languages you speak. The CEO (Opus) picks 3 starter businesses. CxO agents (Sonnet) build and run them. You check in when you want.
+Claude Code asks what languages you speak. You approve **one live revenue experiment** (optional parked hypotheses). Roles run: **Scout → Seller → Builder → Operator → QA** (+ thin **Revenue Coordinator**). Classic CxO titles are demoted as the default.
 
-### Default businesses (all $0 to start)
+### Core offers (Day-1 priority)
 
-| Type | What | Revenue |
+| Offer | What | Notes |
 |------|------|---------|
-| AI Video / Audio | Podcast production, dubbing, video editing | Per-project fees |
-| AI Localization | Translation, document localization for NGOs/SMEs | Per-package fees |
-| AI Agency / RPA | Workflow automation, context engineering workshops | Setup + retainer |
-| AI Annotation | RLHF/data labeling — multilingual premium | Platform hourly pay |
-| AI Tutoring | Native-language tutoring with AI lesson plans | Per-session fees |
+| Human QA | Review / verify AI or ops output | Also a QA role gate |
+| Data Ops | Cleaning, labeling ops, pipeline care | |
+| Vertical automation | Repeatable niche workflow automation | Automate after ~3 identical sold jobs |
+| Paid discovery | Scoped diagnosis | **$299 = discovery only** |
 
-The CEO agent picks the best 3 based on your languages and country. See the [Small Digital Business Playbook](https://app.notion.com/p/Small-Digital-Business-Playbook-3615a7e135d280e2ad8add459923ff4d) for the latest market analysis. Business code lives under `businesses/` in your instance.
+### Experimental
+
+| Offer | Notes |
+|------|---------|
+| Content Factory | Not Day-1 default |
+| Prior playbook types (AI video, localization, …) | Kept for existing operators |
+
+**KPI:** Time to First $1. Robo Co-op may be first distribution; **graduation needs an external paying customer**.
+
+**Approvals:** no customer contact / publish / finalize billing / prod without human approval + evidence.
 
 ---
 
@@ -43,7 +55,7 @@ The CEO agent picks the best 3 based on your languages and country. See the [Sma
 - GitHub account
 - Free tier works for: Supabase, Vercel, Gumroad
 
-> **First time?** Follow the **[Setup Guide](docs/setup-guide.md)** — it walks you through everything from zero, including Claude Desktop, GitHub, Supabase, Vercel, and secure key management.
+> **First time?** Follow the **[Setup Guide](docs/setup-guide.md)**.
 
 ---
 
@@ -80,13 +92,11 @@ Daily heartbeats (Vercel Cron) keep agents running even when you're offline. Rep
 
 ## Budget
 
-Costs depend on usage and model mix. A typical 3-business setup runs on a modest monthly API budget.
-
 | Role | Model | Notes |
 |------|-------|-------|
 | Coordinator (main) | Sonnet | Always-on, low cost |
-| CEO (strategy) | Opus | Called sparingly |
-| CXOs (execution) | Sonnet | Bulk of token usage |
+| Revenue Coordinator | Opus | Gates only — sparingly |
+| Scout / Seller / Builder / Operator | Sonnet | Bulk of token usage |
 | Research | Haiku | Cheapest model |
 
 With prompt caching enabled (configured in `.claude/` + `src/lib/agent/`), expect ~40% lower effective cost.
@@ -99,22 +109,20 @@ With prompt caching enabled (configured in `.claude/` + `src/lib/agent/`), expec
 
 **StartupRobos is a framework, not a single-business template.**
 
-- One StartupRobos instance = one operator = N businesses run by the shared CxO team.
-- Your businesses live under `businesses/<slug>/` inside *your* instance.
-- **Do NOT copy `.claude/agents/`, `AGENTS.md`, or `src/lib/agent/` into a standalone repo.** You'll waste weeks and lose upstream improvements.
+- One StartupRobos instance = one operator = N experiments over time, **one live** by default.
+- Work lives under `businesses/<slug>/` inside *your* instance.
+- **Do NOT copy `.claude/agents/`, `AGENTS.md`, or `src/lib/agent/` into a standalone repo.**
 
 ```
-❌ Wrong:   robo-match-standalone-repo (re-implements CxO prompts)
-✅ Right:   my-startuprobos/businesses/robo-match/  (uses shared CxOs)
+❌ Wrong:   my-offer-standalone-repo (re-implements role prompts)
+✅ Right:   my-startuprobos/businesses/human-qa-niche/  (uses shared roles)
 ```
 
 | | Template clone | Fork |
-|--|---------------|------|
+--|---------------|------|
 | Setup scripts run cleanly | ✅ | ⚠️ references remain |
 | History is yours | ✅ | ❌ (carries upstream history) |
 | Can pull upstream fixes later | ✅ `git remote add upstream …` | ✅ |
-
-The OpenFisca project (our design inspiration) learned this the hard way and [explicitly warns against forking](https://github.com/openfisca/country-template).
 
 ### Staying up to date with upstream
 
@@ -126,19 +134,17 @@ git merge upstream/main
 
 ---
 
-## Adding a new business (for contributors)
+## Adding a new experiment (for contributors)
 
-1. Copy `businesses/_template/` to `businesses/<your-business-slug>/`
-2. Fill in `businesses/<your-business-slug>/README.md` following the template
-3. Use the existing CxO pattern from `src/lib/agent/` — do **not** duplicate it
-4. Register the business type in `src/lib/dashboard/queries.ts` if new agent task types are introduced
-5. Update `memory/MEMORY.md` with the business context
+1. Copy `businesses/_template/` to `businesses/<slug>/`
+2. Fill in README following the template
+3. Use shared `src/lib/agent/` — do **not** duplicate it
+4. Prefer Core `TYPE_CONFIG` keys; mark Experimental clearly
+5. Update `memory/MEMORY.md` with context
 
-**Do not create a standalone repo for a single business.** A business is not a framework.
+**Do not create a standalone repo for a single offer.**
 
 ## Community
-
-Questions, ideas, and showcases welcome:
 
 - **Discord:** [discord.gg/q8ubqBtCd](https://discord.gg/q8ubqBtCd) — `#startup-robos` channel
 

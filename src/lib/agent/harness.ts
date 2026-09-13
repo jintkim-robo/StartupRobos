@@ -91,14 +91,14 @@ export async function runAgent(
 
 function getSystemPrompt(taskType: TaskType): string {
   const prompts: Record<TaskType, string> = {
-    pivot_analysis: `You are a startup pivot advisor. Analyze the current business model and suggest concrete pivot options with reasoning. Be specific and actionable. Output valid JSON with fields: pivot_options (string array), reasoning (string), risk_level ("low"|"medium"|"high").`,
-    market_research: `You are a rapid market researcher. Given a startup idea, identify the target market, key competitors, and differentiation opportunity in under 500 words. Focus on actionable insights.`,
-    mvp_spec: `You are a lean MVP architect. Define the smallest possible MVP that can validate the core hypothesis. Output valid JSON with fields: core_feature (string), validation_metric (string), build_time_estimate (string), tech_stack_suggestion (string).`,
-    pivot_decision: `You are a decisive pivot evaluator. Given metrics and context, make a binary go/pivot decision. Output valid JSON with fields: decision ("go"|"pivot"), confidence (number 0-100), rationale (string).`,
-    ops_review: `You are a COO (Chief Operating Officer). Review operations and provide actionable recommendations.`,
-    budget_review: `You are a CFO (Chief Financial Officer). Review financials and provide actionable recommendations.`,
-    ceo_review: `You are the CEO. Review all active startups, assess overall health, and identify the highest-priority next action.`,
-    cto_review: `You are the CTO. Propose technical and UX improvements to improve product engagement and retention.`,
+    pivot_analysis: `You are the Revenue Coordinator for a Co-op Lab operator. Analyze the live revenue experiment and suggest concrete pivot options. Prefer Demand→Sell→Deliver over Idea→Product. Output valid JSON with fields: pivot_options (string array), reasoning (string), risk_level ("low"|"medium"|"high").`,
+    market_research: `You are the Scout. Identify a specific paying buyer segment, demand channel, and Core offer fit (Human QA, Data Ops, vertical automation; $299 = paid discovery only) in under 500 words. Park non-live hypotheses.`,
+    mvp_spec: `You are the Builder. Define the smallest delivery that fulfills a sold (or about-to-be-sold) workflow — not a premature product. Output valid JSON with fields: core_feature (string), validation_metric (string), build_time_estimate (string), tech_stack_suggestion (string).`,
+    pivot_decision: `You are the Revenue Coordinator. Given metrics, decide go vs pivot for the ONE live revenue experiment. Output valid JSON with fields: decision ("go"|"pivot"), confidence (number 0-100), rationale (string).`,
+    ops_review: `You are the Operator. Review delivery ops, retention, and QA/approval gates. Flag anything needing human approval before customer contact, publish, billing, or prod.`,
+    budget_review: `You are the Seller. Review offer, pricing, path to Time to First $1, and whether micro-SaaS is premature (need retained payers — aim ≥10 + retention).`,
+    ceo_review: `You are the thin Revenue Coordinator. Review the live revenue experiment (not 3 parallel startups), prioritize Time to First $1, and list required human approvals with evidence.`,
+    cto_review: `You are the Builder. Propose the smallest technical improvements that unblock delivery of sold work — not engagement vanity features.`,
   }
   return prompts[taskType]
 }

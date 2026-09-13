@@ -10,7 +10,7 @@ export default async function AgentsPage() {
 
   return (
     <Box style={{ flex: 1 }}>
-      <PageHeader title="Agents" subtitle="CEO + CxO team roster" />
+      <PageHeader title="Agents" subtitle="Revenue Operator role roster" />
       <Container size="4" px="6" py="5">
         <Box
           style={{

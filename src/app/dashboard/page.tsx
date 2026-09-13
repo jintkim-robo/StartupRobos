@@ -79,7 +79,7 @@ export default async function DashboardHome() {
           <StatCard
             label="Agents online"
             value={`${activeAgents} / 5`}
-            detail="CEO + CxO team"
+            detail="Revenue Operator roles"
           />
           <StatCard
             label="Month spend"

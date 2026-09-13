@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased] — Co-op Lab 2.0 Revenue Operator
+
+### Changed
+- Day-1 model: ONE live revenue experiment (Demand→Sell→Deliver→Automate→SaaS later)
+- Roles: Scout / Seller / Builder / Operator / QA + thin Revenue Coordinator (runtime keys unchanged)
+- TYPE_CONFIG: Core (human_qa, data_ops, vertical_automation, paid_discovery) vs Experimental vs Legacy
+- Approvals: human + evidence required for customer contact / publish / billing / prod
+- Docs: `docs/COOP_LAB_2.md`, AGENTS.md, CLAUDE.md, CONTEXT.md, README.md
+
 ## [v0.1.0] - 2026-05-15
 
 ### Added

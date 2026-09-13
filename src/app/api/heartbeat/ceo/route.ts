@@ -11,7 +11,7 @@ function sanitizeForPrompt(text: string, maxLen = 200): string {
     .replace(/^(#{1,6})\s/gm, '\\$1 ') // markdown heading injection 対策
 }
 
-// CEO heartbeat calls Opus which can be slow
+// Revenue Coordinator heartbeat (Opus) — can be slow
 export const maxDuration = 300
 
 export async function GET(req: NextRequest) {
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
     .in('startup_id', startups.map(s => s.id))
     .order('created_at', { ascending: false })
 
-  // Build CEO context for analysis
+  // Build Revenue Coordinator context
   // Note: DB values are sanitized before embedding — treat as untrusted input
   const context = startups.map(s => {
     const exps = (experiments ?? []).filter(e => e.startup_id === s.id)
@@ -46,21 +46,24 @@ export async function GET(req: NextRequest) {
     return `Business: ${sanitizeForPrompt(s.name)} (${sanitizeForPrompt(s.business_type ?? '')})\nRecent experiments:\n${recent || 'none'}`
   }).join('\n\n')
 
-  const prompt = `You are the CEO of Launchpad. Evaluate the status of the following startups and propose the next action for each business:
+  const prompt = `You are the thin Revenue Coordinator for StartupRobos (Co-op Lab 2.0).
+Pipeline: Demand → Sell → Deliver → Automate → SaaS later.
+Primary KPI: Time to First $1. Prefer ONE live revenue experiment; treat extras as parked unless already paying.
 
 ${context}
 
-For each business:
-1. Current challenges (1 line)
-2. Next experiment to try (specific details)
-3. Priority (High/Medium/Low)`
+For each active item:
+1. Live vs parked (1 line)
+2. Next action toward first external $1 (specific)
+3. Human approvals needed (customer contact / publish / billing / prod) + evidence
+4. Priority (High/Medium/Low)`
 
   const start = Date.now()
   const { content, costUsd } = await runHeartbeatTask(supabase, {
     model: 'claude-opus-4-6',
     maxTokens: 1500,
     prompt,
-    systemPrompt: 'You are an experienced startup CEO. Make concise and specific decisions based on data.',
+    systemPrompt: 'You are the thin Revenue Coordinator (Co-op Lab 2.0). Keep focus on Time to First $1. Demote C-suite theater. Require human approval + evidence for customer contact, publish, billing finalize, and prod.',
     startupId: startups[0].id,
     taskType: 'ceo_review',
   })
@@ -69,7 +72,7 @@ For each business:
   const hour = new Date().getUTCHours()
   const period = hour < 6 ? 'Morning' : 'Evening'
   await sendReport(
-    `📊 Launchpad ${period} Report — ${new Date().toLocaleDateString('en-US')}`,
+    `📊 StartupRobos ${period} Report — ${new Date().toLocaleDateString('en-US')}`,
     content
   )
 

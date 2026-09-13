@@ -50,7 +50,7 @@ export async function runCouncil(
 
   const userMessage = `## Startup Context\n${startupContext}\n\n## Agenda\n${agenda}`
 
-  // Step 1: CTO / CMO / COO / CFO in parallel
+  // Step 1: Builder / Scout / Operator / Seller in parallel (runtime keys cto/cmo/coo/cfo)
   const subordinateRoles: Exclude<CXORole, 'ceo'>[] = ['cto', 'cmo', 'coo', 'cfo']
 
   const reports: CXOReport[] = await Promise.all(
@@ -78,7 +78,7 @@ export async function runCouncil(
     console.warn('[council] Failed to fetch dream memory, proceeding without:', err)
   }
 
-  // Step 3: CEO synthesizes all CXO reports (+ past learnings if available)
+  // Step 3: Revenue Coordinator synthesizes role reports (+ past learnings if available)
   const ceoPromptParts = [
     `## Startup Context\n${startupContext}`,
     `## Agenda\n${agenda}`,
@@ -87,10 +87,10 @@ export async function runCouncil(
     ceoPromptParts.push(`## Past Learnings\n${pastLearnings}`)
   }
   ceoPromptParts.push(
-    `## CTO Report\n${byRole.cto.content}`,
-    `## CMO Report\n${byRole.cmo.content}`,
-    `## COO Report\n${byRole.coo.content}`,
-    `## CFO Report\n${byRole.cfo.content}`,
+    `## Builder Report (cto)\n${byRole.cto.content}`,
+    `## Scout Report (cmo)\n${byRole.cmo.content}`,
+    `## Operator Report (coo)\n${byRole.coo.content}`,
+    `## Seller Report (cfo)\n${byRole.cfo.content}`,
   )
   const ceoPrompt = ceoPromptParts.join('\n\n')
 

@@ -1,23 +1,33 @@
 import { describe, it, expect } from 'vitest'
-import { CXO_MODELS, CXO_SYSTEM_PROMPTS, type CXORole } from './cxo'
+import { CXO_MODELS, CXO_SYSTEM_PROMPTS, ROLE_DISPLAY, type CXORole } from './cxo'
 
 const ALL_ROLES: CXORole[] = ['ceo', 'cto', 'cmo', 'coo', 'cfo']
 
 describe('CXO_MODELS', () => {
-  it('defines all 5 CXO roles', () => {
+  it('defines all 5 runtime roles', () => {
     for (const role of ALL_ROLES) {
       expect(CXO_MODELS[role]).toBeDefined()
     }
   })
 
-  it('CEO uses claude-opus-4-6', () => {
+  it('Revenue Coordinator (ceo) uses claude-opus-4-6', () => {
     expect(CXO_MODELS.ceo).toBe('claude-opus-4-6')
   })
 
-  it('CTO/CMO/COO/CFO use claude-sonnet-4-6', () => {
+  it('Scout/Seller/Builder/Operator use claude-sonnet-4-6', () => {
     for (const role of ['cto', 'cmo', 'coo', 'cfo'] as CXORole[]) {
       expect(CXO_MODELS[role]).toBe('claude-sonnet-4-6')
     }
+  })
+})
+
+describe('ROLE_DISPLAY', () => {
+  it('maps runtime keys to Co-op Lab 2.0 names', () => {
+    expect(ROLE_DISPLAY.ceo).toBe('Revenue Coordinator')
+    expect(ROLE_DISPLAY.cmo).toBe('Scout')
+    expect(ROLE_DISPLAY.cfo).toBe('Seller')
+    expect(ROLE_DISPLAY.cto).toBe('Builder')
+    expect(ROLE_DISPLAY.coo).toBe('Operator')
   })
 })
 
@@ -29,11 +39,11 @@ describe('CXO_SYSTEM_PROMPTS', () => {
     }
   })
 
-  it('CEO prompt contains DECISION keyword', () => {
+  it('Revenue Coordinator prompt contains DECISION keyword', () => {
     expect(CXO_SYSTEM_PROMPTS.ceo).toMatch(/DECISION/)
   })
 
-  it('CTO prompt references technical concepts', () => {
-    expect(CXO_SYSTEM_PROMPTS.cto).toMatch(/technical/i)
+  it('Builder prompt references delivery / sold workflow', () => {
+    expect(CXO_SYSTEM_PROMPTS.cto).toMatch(/sold|delivery|Builder/i)
   })
 })
